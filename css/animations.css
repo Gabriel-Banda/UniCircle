@@ -1,0 +1,44 @@
+/* ============================================================================
+   UniCircle — animations.css
+   Tasteful, purposeful motion. Everything here is already guarded by the
+   prefers-reduced-motion block in base.css.
+   ========================================================================= */
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes shimmer {
+  0% { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
+}
+
+@keyframes pop {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.18); }
+  100% { transform: scale(1); }
+}
+
+.enter { animation: fade-up 320ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+.enter-fast { animation: fade-in 180ms ease both; }
+
+/* stagger children entering the viewport — apply --delay inline per item */
+.enter-stagger { animation: fade-up 320ms cubic-bezier(0.16, 1, 0.3, 1) both; animation-delay: var(--delay, 0ms); }
+
+.upvote-pop.active svg { animation: pop 320ms cubic-bezier(0.34, 1.56, 0.64, 1); }
+.save-pop.active svg { animation: pop 320ms cubic-bezier(0.34, 1.56, 0.64, 1); }
+
+.modal-backdrop { animation: fade-in 160ms ease both; }
+.modal-panel { animation: fade-up 220ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+.route-fade { animation: fade-in 200ms ease both; }

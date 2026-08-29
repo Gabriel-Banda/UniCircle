@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create your account — UniCircle</title>
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+
+<div class="auth-shell">
+  <div class="auth-card enter">
+    <div class="rail-brand" style="margin-bottom: var(--space-5); justify-content:center;">
+      <span class="dot">●</span> UniCircle
+    </div>
+    <h2 style="text-align:center;">Create your account</h2>
+    <p style="text-align:center; margin-bottom: var(--space-5);">Next you'll set up your academic community.</p>
+
+    <form id="signup-form" novalidate>
+      <div class="field" id="email-field">
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" autocomplete="email" required>
+        <div class="field-error-message" id="email-error" hidden></div>
+      </div>
+
+      <div class="field" id="password-field">
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" autocomplete="new-password" required>
+        <div class="field-hint">At least 6 characters.</div>
+        <div class="field-error-message" id="password-error" hidden></div>
+      </div>
+
+      <div class="field" id="confirm-field">
+        <label for="confirm">Confirm password</label>
+        <input id="confirm" name="confirm" type="password" autocomplete="new-password" required>
+        <div class="field-error-message" id="confirm-error" hidden></div>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-block" id="submit-btn">Create account</button>
+    </form>
+
+    <p style="text-align:center; margin-top: var(--space-4); font-size: var(--text-sm);">
+      Already have an account? <a href="login.html">Log in</a>
+    </p>
+  </div>
+</div>
+
+<script type="module">
+  import { signUp, redirectIfAuthenticated } from "./js/auth.js";
+  import { showToast } from "./js/components/toast.js";
+
+  redirectIfAuthenticated();
+
+  const form = document.getElementById("signup-form");
+  const submitBtn = document.getElementById("submit-btn");
+  const emailField = document.getElementById("email");
+  const passwordField = document.getElementById("password");
+  const confirmField = document.getElementById("confirm");
+
+  function setFieldError(fieldId, errorId, message) {
+    const field = document.getElementById(fieldId);
+    const error = document.getElementById(errorId);
+    if (message) {
+      field.classList.add("field-error");
+      error.textContent = message;
+      error.hidden = false;
+    } else {
+      field.classList.remove("field-error");
+      error.hidden = true;
+    }
+  }
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    ["email-field", "password-field", "confirm-field"].forEach((id, i) =>
+      setFieldError(id, ["email-error","password-error","confirm-error"][i], "")
+    );
+
+    const email = emailField.value.trim();
+    const password = passwordField.value;
+    const confirm = confirmField.value;
+
+    let valid = true;
+    if (!email) { setFieldError("email-field", "email-error", "Enter your email."); valid = false; }
+    if (password.length < 6) { setFieldError("password-field", "password-error", "Use at least 6 characters."); valid = false; }
+    if (confirm !== password) { setFieldError("confirm-field", "confirm-error", "Passwords don't match."); valid = false; }
+    if (!valid) return;
+
+    submitBtn.classList.add("btn-loading");
+    submitBtn.disabled = true;
+
+    const result = await signUp(email, password);
+
+    submitBtn.classList.remove("btn-loading");
+    submitBtn.disabled = false;
+
+    if (result.error) {
+      showToast(result.error, { type: "error" });
+      return;
+    }
+
+    showToast("Account created. Let's set up your community.", { type: "success" });
+    setTimeout(() => { window.location.href = "onboarding.html"; }, 600);
+  });
+</script>
+</body>
+</html>

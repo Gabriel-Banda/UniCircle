@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Log in — UniCircle</title>
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+
+<div class="auth-shell">
+  <div class="auth-card enter">
+    <div class="rail-brand" style="margin-bottom: var(--space-5); justify-content:center;">
+      <span class="dot">●</span> UniCircle
+    </div>
+    <h2 style="text-align:center;">Welcome back</h2>
+    <p style="text-align:center; margin-bottom: var(--space-5);">Log in to your academic community.</p>
+
+    <form id="login-form" novalidate>
+      <div class="field" id="email-field">
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" autocomplete="email" required>
+        <div class="field-error-message" id="email-error" hidden></div>
+      </div>
+
+      <div class="field" id="password-field">
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" autocomplete="current-password" required>
+        <div class="field-error-message" id="password-error" hidden></div>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-block" id="submit-btn">Log in</button>
+    </form>
+
+    <p style="text-align:center; margin-top: var(--space-4); font-size: var(--text-sm);">
+      <a href="#" id="forgot-link">Forgot your password?</a>
+    </p>
+    <p style="text-align:center; font-size: var(--text-sm);">
+      New here? <a href="signup.html">Create an account</a>
+    </p>
+  </div>
+</div>
+
+<script type="module">
+  import { logIn, requestPasswordReset, redirectIfAuthenticated } from "./js/auth.js";
+  import { showToast } from "./js/components/toast.js";
+
+  redirectIfAuthenticated();
+
+  const form = document.getElementById("login-form");
+  const submitBtn = document.getElementById("submit-btn");
+  const emailField = document.getElementById("email");
+  const passwordField = document.getElementById("password");
+
+  function setFieldError(fieldId, errorId, message) {
+    const field = document.getElementById(fieldId);
+    const error = document.getElementById(errorId);
+    if (message) {
+      field.classList.add("field-error");
+      error.textContent = message;
+      error.hidden = false;
+    } else {
+      field.classList.remove("field-error");
+      error.hidden = true;
+    }
+  }
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    setFieldError("email-field", "email-error", "");
+    setFieldError("password-field", "password-error", "");
+
+    const email = emailField.value.trim();
+    const password = passwordField.value;
+
+    let valid = true;
+    if (!email) { setFieldError("email-field", "email-error", "Enter your email."); valid = false; }
+    if (!password) { setFieldError("password-field", "password-error", "Enter your password."); valid = false; }
+    if (!valid) return;
+
+    submitBtn.classList.add("btn-loading");
+    submitBtn.disabled = true;
+
+    const result = await logIn(email, password);
+
+    submitBtn.classList.remove("btn-loading");
+    submitBtn.disabled = false;
+
+    if (result.error) {
+      showToast(result.error, { type: "error" });
+      return;
+    }
+    window.location.href = "onboarding.html"; // auth.js redirects further if already onboarded
+  });
+
+  document.getElementById("forgot-link").addEventListener("click", async (e) => {
+    e.preventDefault();
+    const email = emailField.value.trim();
+    if (!email) {
+      setFieldError("email-field", "email-error", "Enter your email above first, then click this link.");
+      return;
+    }
+    const result = await requestPasswordReset(email);
+    if (result.error) {
+      showToast(result.error, { type: "error" });
+    } else {
+      showToast("Check your email for a password reset link.", { type: "success" });
+    }
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+/* UniCircle — landing.css */
+
+.hero { padding: var(--space-7) 0 var(--space-8); max-width: 640px; }
+.hero .path-stub { margin-bottom: var(--space-5); display: inline-flex; }
+.hero h1 { font-size: clamp(2.25rem, 5vw, 3.25rem); margin-bottom: var(--space-4); }
+.hero-sub { font-size: var(--text-lg); max-width: 520px; }
+.hero-actions { display: flex; gap: var(--space-3); margin-top: var(--space-5); }
+
+.how-it-works { padding: var(--space-8) 0; border-top: 1px solid var(--line); }
+.steps { list-style: none; margin: var(--space-6) 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-5); }
+.steps li { border-top: 2px solid var(--ink); padding-top: var(--space-3); }
+.steps .meta { color: var(--cobalt); }
+
+.features { padding: var(--space-8) 0; border-top: 1px solid var(--line); }
+
+.cta-band {
+  padding: var(--space-8) 0;
+  text-align: center;
+  border-top: 1px solid var(--line);
+}
+.cta-band p { margin-bottom: var(--space-5); }
+
+@media (max-width: 860px) {
+  .steps { grid-template-columns: 1fr 1fr; }
+}
