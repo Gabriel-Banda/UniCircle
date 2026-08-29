@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Discussion — UniCircle</title>
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/animations.css">
+<link rel="stylesheet" href="css/pages/discussion.css">
+</head>
+<body>
+
+<div class="app-shell">
+  <div id="rail-mount"></div>
+
+  <main class="main route-fade" style="max-width: 720px;">
+    <div id="discussion-root">
+      <div class="skeleton" style="height:28px; width:60%; margin-bottom:var(--space-3);"></div>
+      <div class="skeleton" style="height:120px;"></div>
+    </div>
+
+    <section style="margin-top: var(--space-6);">
+      <h3>Comments (<span id="comment-count">0</span>)</h3>
+
+      <div class="card" style="margin-bottom: var(--space-4);">
+        <div id="reply-banner" class="reply-banner" hidden>
+          <span></span> <button class="btn btn-ghost" id="reply-cancel" style="padding:2px 8px;">Cancel</button>
+        </div>
+        <textarea id="comment-input" rows="3" placeholder="Share your thoughts…" style="width:100%; border:1px solid var(--line); border-radius:var(--radius-md); padding:var(--space-3); margin-bottom:var(--space-3);"></textarea>
+        <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:var(--space-2);">
+          <label style="display:flex; align-items:center; gap:var(--space-2); font-size:var(--text-sm); margin:0;">
+            <input type="checkbox" id="comment-anon" style="width:auto;"> Post anonymously
+          </label>
+          <button class="btn btn-primary" id="comment-submit">Comment</button>
+        </div>
+      </div>
+
+      <div id="comment-list"></div>
+    </section>
+  </main>
+</div>
+
+<div id="tabbar-mount"></div>
+
+<script type="module" src="js/discussion.js"></script>
+</body>
+</html>

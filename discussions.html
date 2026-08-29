@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Discussions — UniCircle</title>
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/animations.css">
+<link rel="stylesheet" href="css/pages/discussions.css">
+</head>
+<body>
+
+<div class="app-shell">
+  <div id="rail-mount"></div>
+
+  <main class="main route-fade">
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: var(--space-5); flex-wrap:wrap; gap: var(--space-3);">
+      <h1 style="margin:0;">Discussions</h1>
+      <button class="btn btn-primary" id="new-discussion-btn">New Discussion</button>
+    </div>
+
+    <div id="category-filter" class="category-chips" style="margin-bottom: var(--space-5);"></div>
+
+    <div id="discussion-list" class="discussion-list">
+      <div class="skeleton" style="height:90px; margin-bottom: var(--space-3);"></div>
+      <div class="skeleton" style="height:90px; margin-bottom: var(--space-3);"></div>
+    </div>
+  </main>
+</div>
+
+<div id="tabbar-mount"></div>
+
+<script type="module" src="js/discussions.js"></script>
+</body>
+</html>

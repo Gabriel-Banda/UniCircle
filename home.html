@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Home — UniCircle</title>
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/animations.css">
+<link rel="stylesheet" href="css/pages/home.css">
+</head>
+<body>
+
+<div class="app-shell">
+  <div id="rail-mount"></div>
+
+  <main class="main route-fade">
+    <h1 id="welcome-heading">Welcome 👋</h1>
+    <p class="meta" style="margin-bottom: var(--space-6);">Here's what's happening in your academic community.</p>
+
+    <section class="dash-section enter">
+      <h3>My Community</h3>
+      <div id="my-community"></div>
+    </section>
+
+    <section class="dash-section enter">
+      <h3>My Courses</h3>
+      <div id="my-courses"></div>
+    </section>
+
+    <div class="grid grid-2">
+      <section class="dash-section enter">
+        <h3>Recent Discussions</h3>
+        <div id="recent-discussions" class="discussion-list"></div>
+      </section>
+
+      <section class="dash-section enter">
+        <h3>Recommended Communities</h3>
+        <div id="recommended-communities"></div>
+      </section>
+    </div>
+  </main>
+</div>
+
+<div id="tabbar-mount"></div>
+
+<script type="module" src="js/home.js"></script>
+</body>
+</html>

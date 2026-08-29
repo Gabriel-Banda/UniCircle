@@ -1,0 +1,66 @@
+/* UniCircle — onboarding.css */
+
+.onboard-card { min-height: 420px; }
+
+.onboard-progress {
+  display: flex;
+  gap: 6px;
+  margin-bottom: var(--space-2);
+}
+
+.onboard-progress span {
+  flex: 1;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--line);
+  transition: background 200ms ease;
+}
+
+.onboard-progress span.done { background: var(--cobalt); }
+.onboard-progress span.current { background: var(--chartreuse); }
+
+.onboard-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: var(--space-5);
+}
+
+.ob-results {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-height: 220px;
+  overflow-y: auto;
+  margin-bottom: var(--space-4);
+}
+
+.ob-result {
+  text-align: left;
+  padding: var(--space-3);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--paper);
+  cursor: pointer;
+  font-size: var(--text-sm);
+  transition: border-color 120ms ease, background 120ms ease;
+}
+
+.ob-result:hover { border-color: var(--cobalt); background: var(--cobalt-dim); }
+
+.ob-result-add { color: var(--cobalt); font-weight: 600; border-style: dashed; }
+
+.ob-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+
+.ob-chip-row .chip { gap: 6px; }
+.ob-chip-row .chip button {
+  background: none; border: none; cursor: pointer;
+  color: var(--cobalt); font-weight: 700; font-size: var(--text-sm); line-height: 1;
+  padding: 0;
+}
+
+.onboard-done { text-align: center; padding: var(--space-6) 0; }
