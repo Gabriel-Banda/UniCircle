@@ -1,5 +1,5 @@
 // UniCircle — auth.js
-// Real signup/login/logout/password-reset against Supabase Auth,
+// signup/login/logout/password-reset against Supabase Auth,
 // plus session guards used by every protected page.
 
 import { supabase, friendlyError, getCurrentProfile } from "./api.js";
