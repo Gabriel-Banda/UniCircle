@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profile — UniCircle</title>
+<link rel="stylesheet" href="../src/css/base.css">
+<link rel="stylesheet" href="../src/css/layout.css">
+<link rel="stylesheet" href="../src/css/components.css">
+<link rel="stylesheet" href="../src/css/animations.css">
+</head>
+<body>
+
+<div class="app-shell">
+  <div id="rail-mount"></div>
+
+  <main class="main route-fade" style="max-width: 720px;">
+    <div id="profile-header">
+      <div class="skeleton" style="height:64px; margin-bottom: var(--space-4);"></div>
+    </div>
+
+    <section class="dash-section" style="margin-top: var(--space-6);">
+      <h3>Courses</h3>
+      <div id="profile-courses"></div>
+    </section>
+
+    <section class="dash-section">
+      <h3>Study Groups</h3>
+      <div id="profile-groups"></div>
+    </section>
+
+    <section class="dash-section">
+      <h3>Discussions</h3>
+      <div id="profile-discussions"></div>
+    </section>
+  </main>
+</div>
+
+<div id="tabbar-mount"></div>
+
+<script type="module" src="../src/js/profile.js"></script>
+</body>
+</html>

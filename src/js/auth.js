@@ -23,7 +23,7 @@ export async function logIn(email, password) {
 export async function logOut() {
   const { error } = await supabase.auth.signOut();
   if (error) return { error: friendlyError(error) };
-  window.location.href = "index.html";
+  window.location.href = "../index.html";
 }
 
 export async function requestPasswordReset(email) {

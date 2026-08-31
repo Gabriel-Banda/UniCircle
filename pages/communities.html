@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Communities — UniCircle</title>
+<link rel="stylesheet" href="../src/css/base.css">
+<link rel="stylesheet" href="../src/css/layout.css">
+<link rel="stylesheet" href="../src/css/components.css">
+<link rel="stylesheet" href="../src/css/animations.css">
+</head>
+<body>
+
+<div class="app-shell">
+  <div id="rail-mount"></div>
+
+  <main class="main route-fade">
+    <h1>Communities</h1>
+    <p class="meta" style="margin-bottom: var(--space-5);">Institution, faculty, program, year, and course communities — real ones, built by real students.</p>
+
+    <div class="field" style="max-width: 360px;">
+      <input id="community-search" placeholder="Search communities…">
+    </div>
+
+    <div id="level-filter" class="category-chips" style="margin: var(--space-4) 0 var(--space-5);"></div>
+
+    <div id="community-list">
+      <div class="skeleton" style="height:120px; margin-bottom: var(--space-3);"></div>
+      <div class="skeleton" style="height:120px;"></div>
+    </div>
+  </main>
+</div>
+
+<div id="tabbar-mount"></div>
+
+<script type="module" src="../src/js/communities.js"></script>
+</body>
+</html>

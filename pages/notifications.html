@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notifications — UniCircle</title>
+<link rel="stylesheet" href="../src/css/base.css">
+<link rel="stylesheet" href="../src/css/layout.css">
+<link rel="stylesheet" href="../src/css/components.css">
+<link rel="stylesheet" href="../src/css/animations.css">
+</head>
+<body>
+
+<div class="app-shell">
+  <div id="rail-mount"></div>
+
+  <main class="main route-fade" style="max-width: 640px;">
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: var(--space-5);">
+      <h1 style="margin:0;">Notifications</h1>
+      <button class="btn btn-ghost" id="mark-all-read">Mark all read</button>
+    </div>
+    <div id="notification-list">
+      <div class="skeleton" style="height:60px; margin-bottom: var(--space-2);"></div>
+    </div>
+  </main>
+</div>
+
+<div id="tabbar-mount"></div>
+
+<script type="module" src="../src/js/notifications.js"></script>
+</body>
+</html>

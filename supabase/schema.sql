@@ -1,7 +1,5 @@
 -- ============================================================================
 -- UniCircle — Supabase schema
--- Run this in the Supabase SQL editor on a fresh project.
--- Auth users live in Supabase's built-in `auth.users`; `profiles` extends it.
 -- ============================================================================
 
 create extension if not exists "uuid-ossp";
@@ -219,12 +217,22 @@ alter table programs enable row level security;
 alter table academic_years enable row level security;
 alter table courses enable row level security;
 
--- Academic hierarchy: readable by anyone signed in, writable only by admins
+-- Academic hierarchy: readable by anyone signed in. Insert is allowed for
+-- any authenticated student too — onboarding lets students add their own
+-- institution/faculty/program/year/course if it isn't listed yet, so this
+-- can't be admin-only. (Update/delete stay admin-only via no policy, i.e.
+-- effectively locked until an admin policy is added in the moderation phase.)
 create policy "hierarchy readable" on institutions for select using (true);
 create policy "hierarchy readable" on faculties for select using (true);
 create policy "hierarchy readable" on programs for select using (true);
 create policy "hierarchy readable" on academic_years for select using (true);
 create policy "hierarchy readable" on courses for select using (true);
+
+create policy "hierarchy insert by authenticated" on institutions for insert with check (auth.role() = 'authenticated');
+create policy "hierarchy insert by authenticated" on faculties for insert with check (auth.role() = 'authenticated');
+create policy "hierarchy insert by authenticated" on programs for insert with check (auth.role() = 'authenticated');
+create policy "hierarchy insert by authenticated" on academic_years for insert with check (auth.role() = 'authenticated');
+create policy "hierarchy insert by authenticated" on courses for insert with check (auth.role() = 'authenticated');
 
 -- Profiles: public/community-visible profiles readable by anyone signed in;
 -- a user always sees and edits their own profile.
@@ -253,6 +261,7 @@ create policy "reactions manage own" on reactions for all using (user_id = auth.
 create policy "saved own" on saved_discussions for all using (user_id = auth.uid());
 
 create policy "communities readable" on communities for select using (auth.role() = 'authenticated');
+create policy "communities insert by authenticated" on communities for insert with check (auth.role() = 'authenticated');
 create policy "community_members readable" on community_members for select using (auth.role() = 'authenticated');
 create policy "community_members manage own" on community_members for all using (user_id = auth.uid());
 
@@ -277,3 +286,42 @@ create policy "settings own" on user_settings for all using (user_id = auth.uid(
 -- author_id column is never dropped, so moderators/admins can still trace
 -- content — enforce that distinction in application code, not RLS, since
 -- RLS can't selectively mask a single column per row for non-owners.
+
+
+create policy "hierarchy insert by authenticated" on institutions for insert with check (auth.role() = 'authenticated');
+create policy "hierarchy insert by authenticated" on faculties for insert with check (auth.role() = 'authenticated');
+create policy "hierarchy insert by authenticated" on programs for insert with check (auth.role() = 'authenticated');
+create policy "hierarchy insert by authenticated" on academic_years for insert with check (auth.role() = 'authenticated');
+create policy "hierarchy insert by authenticated" on courses for insert with check (auth.role() = 'authenticated');
+create policy "communities insert by authenticated" on communities for insert with check (auth.role() = 'authenticated');
+
+-- UniCircle — patch 002
+--
+-- 1. discussions.group_id — study groups need real posts (spec section 13:
+--    "Posts/discussions"), and the original schema only let a discussion
+--    belong to a community, not a group. Nullable, additive, safe on
+--    existing data.
+--
+-- 2. delete_own_account() — a real self-service account deletion. The
+--    client's anon key can't delete rows from auth.users directly (that
+--    needs elevated privileges), so this wraps it in a SECURITY DEFINER
+--    function: it runs with the privileges of its owner (not the caller),
+--    but the `where id = auth.uid()` clause means a user can only ever
+--    delete their own account. profiles/discussions/comments/etc. all
+--    cascade from auth.users or from profiles, so this cleans up
+--    everything, not just the login.
+
+alter table discussions add column if not exists group_id uuid references study_groups(id) on delete cascade;
+
+create or replace function delete_own_account()
+returns void
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  delete from auth.users where id = auth.uid();
+end;
+$$;
+
+grant execute on function delete_own_account() to authenticated;

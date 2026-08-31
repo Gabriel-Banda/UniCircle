@@ -1,0 +1,11 @@
+/* UniCircle — discussions.css */
+
+.discussion-list { display: flex; flex-direction: column; gap: var(--space-3); }
+
+.discussion-row {
+  display: flex;
+  color: inherit;
+  transition: border-color 120ms ease, transform 120ms ease;
+}
+
+.discussion-row:hover { border-color: var(--cobalt); text-decoration: none; transform: translateX(2px); }

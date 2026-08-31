@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Settings — UniCircle</title>
+<link rel="stylesheet" href="../src/css/base.css">
+<link rel="stylesheet" href="../src/css/layout.css">
+<link rel="stylesheet" href="../src/css/components.css">
+<link rel="stylesheet" href="../src/css/animations.css">
+</head>
+<body>
+
+<div class="app-shell">
+  <div id="rail-mount"></div>
+
+  <main class="main route-fade" style="max-width: 560px;">
+    <h1 style="margin-bottom: var(--space-6);">Settings</h1>
+
+    <section class="dash-section card">
+      <h3>Account</h3>
+      <div id="account-section"></div>
+    </section>
+
+    <section class="dash-section card">
+      <h3>Privacy</h3>
+      <div id="privacy-section"></div>
+    </section>
+
+    <section class="dash-section card">
+      <h3>Notifications</h3>
+      <div id="notifications-section"></div>
+    </section>
+
+    <section class="dash-section card">
+      <h3>Appearance</h3>
+      <div id="appearance-section"></div>
+    </section>
+
+    <section class="dash-section card">
+      <h3>Security</h3>
+      <div id="security-section"></div>
+    </section>
+
+    <section class="dash-section card" style="border-color: var(--brick);">
+      <h3 style="color: var(--brick);">Danger Zone</h3>
+      <div id="danger-section"></div>
+    </section>
+  </main>
+</div>
+
+<div id="tabbar-mount"></div>
+
+<script type="module" src="../src/js/settings.js"></script>
+</body>
+</html>

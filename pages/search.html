@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Search — UniCircle</title>
+<link rel="stylesheet" href="../src/css/base.css">
+<link rel="stylesheet" href="../src/css/layout.css">
+<link rel="stylesheet" href="../src/css/components.css">
+<link rel="stylesheet" href="../src/css/animations.css">
+</head>
+<body>
+
+<div class="app-shell">
+  <div id="rail-mount"></div>
+
+  <main class="main route-fade" style="max-width: 640px;">
+    <h1>Search</h1>
+    <div class="field">
+      <input id="search-input" placeholder="Search discussions, people, communities, courses…" autofocus>
+    </div>
+    <div id="type-tabs" class="category-chips" style="margin: var(--space-4) 0 var(--space-5);"></div>
+    <div id="recent-searches" style="margin-bottom: var(--space-5);"></div>
+    <div id="search-results"></div>
+  </main>
+</div>
+
+<div id="tabbar-mount"></div>
+
+<script type="module" src="../src/js/search.js"></script>
+</body>
+</html>
