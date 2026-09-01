@@ -21,6 +21,8 @@ const discussionId = params.get("id");
 
 let profile;
 let discussion;
+let discussionAuthor = null;
+let discussionCommunity = null;
 let replyingTo = null; // comment id, or null for a top-level comment
 
 async function notify(userId, type, extra = {}) {
@@ -31,11 +33,18 @@ async function notify(userId, type, extra = {}) {
 // ---------- Discussion header ----------
 
 async function loadDiscussion() {
+  // Plain, non-embedded query — the discussion row on its own. Author and
+  // community are fetched separately below rather than via nested embeds,
+  // since a multi-relationship embed here previously broke after schema
+  // changes (PostgREST's relationship cache needs to catch up on DDL, and
+  // a 2-way embed is exactly what's fragile to that).
   const { data, error } = await supabase
     .from("discussions")
-    .select("*, profiles(id, name, username), communities(id, name, level)")
+    .select("*")
     .eq("id", discussionId)
-    .single();
+    .maybeSingle();
+
+  if (error) console.error("UniCircle: failed to load discussion", error);
 
   if (error || !data) {
     document.getElementById("discussion-root").innerHTML = `
@@ -49,6 +58,15 @@ async function loadDiscussion() {
   return data;
 }
 
+async function loadAuthorAndCommunity(d) {
+  const [authorRes, communityRes] = await Promise.all([
+    d.author_id ? supabase.from("profiles").select("id, name, username").eq("id", d.author_id).maybeSingle() : Promise.resolve({ data: null }),
+    d.community_id ? supabase.from("communities").select("id, name, level").eq("id", d.community_id).maybeSingle() : Promise.resolve({ data: null }),
+  ]);
+  discussionAuthor = authorRes.data;
+  discussionCommunity = communityRes.data;
+}
+
 async function renderHeader() {
   const isAuthor = discussion.author_id === profile.id;
   const { data: reactions } = await supabase.from("reactions").select("user_id").eq("discussion_id", discussionId);
@@ -59,13 +77,13 @@ async function renderHeader() {
   document.getElementById("discussion-root").innerHTML = `
     <div class="path-stub" style="margin-bottom: var(--space-4);">
       <a href="communities.html">Communities</a><span class="sep">/</span>
-      <span class="current">${escapeHtml(discussion.communities?.name || "")}</span>
+      <span class="current">${escapeHtml(discussionCommunity?.name || "")}</span>
     </div>
 
-    <span class="category-chip" style="cursor:default;">${discussion.category.replace(/_/g, " ")}</span>
+    <span class="category-chip" data-category="${discussion.category}" style="cursor:default;">${discussion.category.replace(/_/g, " ")}</span>
     <h1 style="margin: var(--space-3) 0 var(--space-2);" id="d-title">${escapeHtml(discussion.title)}</h1>
     <p class="meta" style="margin-bottom: var(--space-4);">
-      ${discussion.is_anonymous ? "Anonymous Student" : `<a href="profile.html?id=${discussion.profiles?.id}">${escapeHtml(discussion.profiles?.name || "Unknown")}</a>`}
+      ${discussion.is_anonymous ? "Anonymous Student" : `<a href="profile.html?id=${discussionAuthor?.id || ""}">${escapeHtml(discussionAuthor?.name || "Unknown")}</a>`}
       · ${timeAgo(discussion.created_at)}
       ${discussion.updated_at !== discussion.created_at ? " · edited" : ""}
     </p>
@@ -186,11 +204,20 @@ function reportContent({ discussion_id = null, comment_id = null }) {
 async function loadComments() {
   const { data, error } = await supabase
     .from("comments")
-    .select("*, profiles(id, name, username)")
+    .select("*")
     .eq("discussion_id", discussionId)
     .order("created_at", { ascending: true });
-  if (error) { showToast(friendlyError(error), { type: "error" }); return []; }
-  return data || [];
+  if (error) { console.error("UniCircle: failed to load comments", error); showToast(friendlyError(error), { type: "error" }); return []; }
+
+  const comments = data || [];
+  const authorIds = [...new Set(comments.map(c => c.author_id))];
+  const authorsById = {};
+  if (authorIds.length) {
+    const { data: authors } = await supabase.from("profiles").select("id, name, username").in("id", authorIds);
+    (authors || []).forEach(a => { authorsById[a.id] = a; });
+  }
+  comments.forEach(c => { c.author = authorsById[c.author_id] || null; });
+  return comments;
 }
 
 async function renderComments() {
@@ -217,9 +244,9 @@ async function renderComments() {
     const myReaction = (reactionsByComment[c.id] || []).includes(profile.id);
     return `
     <div class="comment ${isReply ? "is-reply" : ""}" data-id="${c.id}">
-      <span class="avatar-chip">${c.is_anonymous ? "?" : (c.profiles?.name || "?").trim().split(/\s+/).slice(0,2).map(w=>w[0]?.toUpperCase()).join("")}</span>
+      <span class="avatar-chip">${c.is_anonymous ? "?" : (c.author?.name || "?").trim().split(/\s+/).slice(0,2).map(w=>w[0]?.toUpperCase()).join("")}</span>
       <div class="comment-body">
-        <p class="meta" style="margin:0 0 2px;">${c.is_anonymous ? "Anonymous Student" : escapeHtml(c.profiles?.name || "Unknown")} · ${timeAgo(c.created_at)}</p>
+        <p class="meta" style="margin:0 0 2px;">${c.is_anonymous ? "Anonymous Student" : escapeHtml(c.author?.name || "Unknown")} · ${timeAgo(c.created_at)}</p>
         <p style="white-space:pre-wrap; margin:0;" class="c-text">${escapeHtml(c.body)}</p>
         <div class="comment-actions">
           <button class="c-upvote" data-id="${c.id}">▲ ${(reactionsByComment[c.id] || []).length}${myReaction ? " (you)" : ""}</button>
@@ -331,6 +358,7 @@ async function submitComment() {
 
   discussion = await loadDiscussion();
   if (!discussion) return;
+  await loadAuthorAndCommunity(discussion);
 
   await renderHeader();
   await renderComments();

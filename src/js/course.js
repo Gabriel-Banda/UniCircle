@@ -124,10 +124,10 @@ async function renderTabContent() {
   const { data: discussions } = await q;
 
   root.innerHTML = (discussions && discussions.length)
-    ? `<div class="discussion-list">${discussions.map(d => `
-        <a class="card discussion-row" href="discussion.html?id=${d.id}">
+    ? `<div class="discussion-list">${discussions.map((d, i) => `
+        <a class="card discussion-row enter-stagger" style="--delay:${i * 40}ms" href="discussion.html?id=${d.id}">
           <div>
-            <span class="category-chip" style="cursor:default;">${d.category.replace(/_/g, " ")}</span>
+            <span class="category-chip" data-category="${d.category}" style="cursor:default;">${d.category.replace(/_/g, " ")}</span>
             <h4 style="margin: var(--space-2) 0 4px;">${escapeHtml(d.title)}</h4>
             <p class="meta" style="margin:0;">${d.is_anonymous ? "Anonymous Student" : escapeHtml(d.profiles?.name || "Unknown")} · ${timeAgo(d.created_at)}</p>
           </div>

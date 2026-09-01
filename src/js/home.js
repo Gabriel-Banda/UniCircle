@@ -95,7 +95,7 @@ function timeAgo(iso) {
     ? discussions.map(d => `
         <a class="card discussion-row" href="discussion.html?id=${d.id}">
           <div>
-            <span class="chip">${d.category.replace(/_/g, " ")}</span>
+            <span class="category-chip" data-category="${d.category}" style="cursor:default;">${d.category.replace(/_/g, " ")}</span>
             <h4 style="margin: var(--space-2) 0 0;">${escapeHtml(d.title)}</h4>
             <p class="meta" style="margin:0;">${d.is_anonymous ? "Anonymous Student" : escapeHtml(d.profiles?.name || "Unknown")} · ${timeAgo(d.created_at)}</p>
           </div>
@@ -103,7 +103,7 @@ function timeAgo(iso) {
     : `<div class="empty-state">
         <h3>Your community is quiet... for now.</h3>
         <p>Start the first discussion and bring your classmates into the conversation.</p>
-        <button class="btn btn-primary" disabled title="Discussions launch in the next build phase">Create Discussion</button>
+        <a class="btn btn-primary" href="discussions.html#new">Create Discussion</a>
       </div>`;
 
   const recommended = await loadRecommendedCommunities(profile.id);

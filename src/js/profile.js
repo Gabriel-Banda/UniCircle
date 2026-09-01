@@ -11,6 +11,13 @@ function escapeHtml(s) {
 function initials(name) {
   return (name || "?").trim().split(/\s+/).slice(0, 2).map(w => w[0]?.toUpperCase()).join("");
 }
+function timeAgo(iso) {
+  const diff = (Date.now() - new Date(iso).getTime()) / 1000;
+  if (diff < 60) return "just now";
+  if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
+  if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
+  return `${Math.floor(diff / 86400)}d ago`;
+}
 
 const viewId = new URLSearchParams(window.location.search).get("id");
 let profile, viewedProfile, isSelf;
@@ -93,7 +100,14 @@ async function renderCourses() {
 async function renderDiscussions() {
   const { data } = await supabase.from("discussions").select("id, title, category, created_at").eq("author_id", viewedProfile.id).eq("is_anonymous", false).order("created_at", { ascending: false }).limit(10);
   document.getElementById("profile-discussions").innerHTML = (data && data.length)
-    ? data.map(d => `<a class="card discussion-row" href="discussion.html?id=${d.id}" style="margin-bottom: var(--space-2);"><div><span class="category-chip" style="cursor:default;">${d.category.replace(/_/g," ")}</span><h4 style="margin: var(--space-2) 0 0;">${escapeHtml(d.title)}</h4></div></a>`).join("")
+    ? `<div class="discussion-list">${data.map((d, i) => `
+        <a class="card discussion-row enter-stagger" style="--delay:${i * 30}ms" href="discussion.html?id=${d.id}">
+          <div>
+            <span class="category-chip" data-category="${d.category}" style="cursor:default;">${d.category.replace(/_/g, " ")}</span>
+            <h4 style="margin: var(--space-2) 0 4px;">${escapeHtml(d.title)}</h4>
+            <p class="meta" style="margin:0;">${timeAgo(d.created_at)}</p>
+          </div>
+        </a>`).join("")}</div>`
     : `<p class="meta">No discussions yet.</p>`;
 }
 

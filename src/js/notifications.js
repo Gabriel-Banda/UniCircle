@@ -51,8 +51,8 @@ function render(notifications) {
     return;
   }
 
-  list.innerHTML = notifications.map(n => `
-    <a class="card notification-row ${n.is_read ? "" : "unread"}" href="${targetHref(n)}" data-id="${n.id}">
+  list.innerHTML = notifications.map((n, i) => `
+    <a class="card notification-row enter-stagger ${n.is_read ? "" : "unread"}" style="--delay:${i * 30}ms" href="${targetHref(n)}" data-id="${n.id}">
       <span class="notif-dot" aria-hidden="true"></span>
       <div>
         <p style="margin:0;">${escapeHtml((COPY[n.type] || (() => "New activity"))(n.profiles?.name || "Someone"))}</p>

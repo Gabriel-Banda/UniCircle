@@ -18,6 +18,7 @@ export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
  */
 export function friendlyError(error) {
   if (!error) return "Something went wrong. Please try again.";
+  console.error("UniCircle error:", error);
   const msg = (error.message || "").toLowerCase();
 
   if (msg.includes("invalid login credentials")) return "That email or password isn't right.";
@@ -27,6 +28,7 @@ export function friendlyError(error) {
   if (msg.includes("failed to fetch") || msg.includes("network")) return "Can't reach the server — check your connection and try again.";
   if (msg.includes("jwt") || msg.includes("session")) return "Your session has expired. Please log in again.";
   if (msg.includes("duplicate key") && msg.includes("username")) return "That username is already taken.";
+  if (msg.includes("row-level security") || msg.includes("permission denied")) return "You don't have permission to do that yet — this usually means a database policy needs updating.";
 
   return "Something went wrong. Please try again.";
 }

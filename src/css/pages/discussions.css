@@ -5,7 +5,37 @@
 .discussion-row {
   display: flex;
   color: inherit;
-  transition: border-color 120ms ease, transform 120ms ease;
+  gap: var(--space-3);
+  align-items: flex-start;
 }
 
-.discussion-row:hover { border-color: var(--cobalt); text-decoration: none; transform: translateX(2px); }
+.discussion-row:hover { text-decoration: none; }
+
+.discussion-row .category-chip {
+  cursor: default;
+  border-color: transparent;
+  color: #fff;
+}
+
+/* Category color-coding — a quiet visual language once you learn it,
+   readable at a glance in a dense feed. */
+.discussion-row [data-category="question"] { background: var(--cobalt); }
+.discussion-row [data-category="course_discussion"] { background: var(--ink); }
+.discussion-row [data-category="assignment"] { background: #8A5CF6; }
+.discussion-row [data-category="exam"] { background: var(--brick); }
+.discussion-row [data-category="study_help"] { background: #0EA5A5; }
+.discussion-row [data-category="resource"] { background: #16A34A; }
+.discussion-row [data-category="study_group"] { background: #D97706; }
+.discussion-row [data-category="campus_life"] { background: #DB2777; }
+.discussion-row [data-category="announcement"] { background: var(--ink); }
+.discussion-row [data-category="project"] { background: #4338CA; }
+.discussion-row [data-category="career"] { background: #0369A1; }
+.discussion-row [data-category="general"] { background: var(--slate); }
+
+#new-discussion-btn {
+  transition: transform 180ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+#new-discussion-btn:hover { transform: translateY(-2px) scale(1.03); }
+
+.discussion-row h4 { transition: color 140ms ease; }
+.discussion-row:hover h4 { color: var(--cobalt); }

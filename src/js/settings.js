@@ -12,6 +12,7 @@ function escapeHtml(s) {
 let profile, settings;
 
 function applyTheme(mode) {
+  localStorage.setItem("unicircle_theme", mode);
   const resolved = mode === "system"
     ? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
     : mode;

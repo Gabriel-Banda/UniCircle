@@ -4,6 +4,25 @@
 // page's profile has loaded.
 
 import { logOut } from "../auth.js";
+import { supabase } from "../api.js";
+
+function applyTheme(mode) {
+  localStorage.setItem("unicircle_theme", mode);
+  const resolved = mode === "system"
+    ? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
+    : mode;
+  document.documentElement.setAttribute("data-theme", resolved);
+}
+
+/** Reconcile the local theme cache with the database in the background —
+ * covers "changed theme on another device" without blocking first paint,
+ * since the blocking <head> script already applied the cached value. */
+async function syncTheme(userId) {
+  const { data } = await supabase.from("user_settings").select("appearance").eq("user_id", userId).maybeSingle();
+  if (data?.appearance && data.appearance !== localStorage.getItem("unicircle_theme")) {
+    applyTheme(data.appearance);
+  }
+}
 
 const LINKS = [
   { id: "home", label: "Home", href: "home.html", icon: "home" },
@@ -38,6 +57,8 @@ function initials(name) {
 }
 
 export function mountAppShell(activePage, profile) {
+  if (profile?.id) syncTheme(profile.id);
+
   const railMount = document.getElementById("rail-mount");
   const tabMount = document.getElementById("tabbar-mount");
 

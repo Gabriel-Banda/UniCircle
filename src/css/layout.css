@@ -51,14 +51,19 @@
   color: var(--ink-soft);
   font-weight: 500;
   font-size: var(--text-sm);
+  transition: background 160ms ease, color 160ms ease, transform 160ms ease;
 }
 
-.rail-link:hover { background: var(--paper-dim); text-decoration: none; }
+.rail-link:hover { background: var(--paper-dim); text-decoration: none; transform: translateX(2px); }
 
 .rail-link.active {
   background: var(--cobalt-dim);
   color: var(--cobalt);
+  animation: fade-in 200ms ease both;
 }
+
+.rail-link svg { transition: transform 160ms ease; }
+.rail-link:hover svg { transform: scale(1.1); }
 
 .rail-footer {
   margin-top: auto;
@@ -104,8 +109,12 @@
     font-size: 10px;
     color: var(--slate);
     font-weight: 500;
+    transition: color 160ms ease, transform 160ms ease;
   }
 
+  .tab-link:active { transform: scale(0.9); }
+  .tab-link svg { transition: transform 160ms cubic-bezier(0.34, 1.56, 0.64, 1); }
+  .tab-link.active svg { transform: translateY(-2px); }
   .tab-link.active { color: var(--cobalt); }
   .tab-link:hover { text-decoration: none; }
 }
