@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin & Moderation — UniCircle</title>
+  <link rel="stylesheet" href="/src/css/base.css" />
+  <link rel="stylesheet" href="/src/css/animations.css" />
+  <link rel="stylesheet" href="/src/css/components.css" />
+  <link rel="stylesheet" href="/src/css/layout.css" />
+</head>
+<body>
+  <div class="app-wrapper">
+    <header class="top-header"></header>
+
+    <div class="main-layout">
+      <aside class="left-sidebar"></aside>
+
+      <main class="content-stream">
+        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+          <div>
+            <h1 style="font-size: 1.75rem;">🛡️ Moderation & Admin Console</h1>
+            <p style="font-size: 0.9375rem;">Review user reports, enforce community guidelines, and monitor platform health.</p>
+          </div>
+        </div>
+
+        <!-- Platform Real Metrics -->
+        <div id="admin-metrics-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.75rem; margin-top: 1rem;"></div>
+
+        <!-- Moderation Reports Queue -->
+        <div class="card" style="margin-top: 1.5rem;">
+          <div class="card-header" style="border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem;">
+            <h3 style="font-size: 1.15rem;">Flagged Content Reports</h3>
+            <div class="tab-nav" style="border-bottom: none; margin-bottom: 0; padding-bottom: 0;">
+              <button class="tab-item active" data-status="pending">Pending</button>
+              <button class="tab-item" data-status="resolved">Resolved</button>
+              <button class="tab-item" data-status="dismissed">Dismissed</button>
+            </div>
+          </div>
+
+          <div id="reports-list-container" class="stagger-container" style="display: flex; flex-direction: column; gap: 1rem; margin-top: 1rem;"></div>
+        </div>
+      </main>
+
+      <aside class="right-rail"></aside>
+    </div>
+  </div>
+
+  <script type="module" src="/src/js/pages/admin.js"></script>
+</body>
+</html>

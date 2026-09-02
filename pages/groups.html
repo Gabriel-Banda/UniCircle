@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Study Groups — UniCircle</title>
+  <link rel="stylesheet" href="/src/css/base.css" />
+  <link rel="stylesheet" href="/src/css/animations.css" />
+  <link rel="stylesheet" href="/src/css/components.css" />
+  <link rel="stylesheet" href="/src/css/layout.css" />
+</head>
+<body>
+  <div class="app-wrapper">
+    <header class="top-header"></header>
+
+    <div class="main-layout">
+      <aside class="left-sidebar"></aside>
+
+      <main class="content-stream">
+        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+          <div>
+            <h1 style="font-size: 1.75rem;">Study Groups</h1>
+            <p style="font-size: 0.9375rem;">Find your study crew. Form and join groups with students from your courses.</p>
+          </div>
+          <button id="open-new-group-modal-btn" class="btn btn-primary btn-interactive">
+            <span>👥</span>
+            <span>Create Study Group</span>
+          </button>
+        </div>
+
+        <div class="tab-nav">
+          <button class="tab-item active" data-filter="all">All Groups</button>
+          <button class="tab-item" data-filter="my">My Study Groups</button>
+        </div>
+
+        <div id="study-groups-grid" class="stagger-container" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem;"></div>
+      </main>
+
+      <aside class="right-rail"></aside>
+    </div>
+  </div>
+
+  <script type="module" src="/src/js/pages/groups.js"></script>
+</body>
+</html>

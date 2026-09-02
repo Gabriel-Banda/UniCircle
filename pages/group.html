@@ -1,33 +1,57 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
-<script>(function(){try{var t=localStorage.getItem('unicircle_theme')||'system';var r=t==='system'?(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):t;document.documentElement.setAttribute('data-theme',r);}catch(e){}})();</script>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Study Group — UniCircle</title>
-<link rel="stylesheet" href="../src/css/base.css">
-<link rel="stylesheet" href="../src/css/layout.css">
-<link rel="stylesheet" href="../src/css/components.css">
-<link rel="stylesheet" href="../src/css/animations.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Study Group — UniCircle</title>
+  <link rel="stylesheet" href="/src/css/base.css" />
+  <link rel="stylesheet" href="/src/css/animations.css" />
+  <link rel="stylesheet" href="/src/css/components.css" />
+  <link rel="stylesheet" href="/src/css/layout.css" />
 </head>
 <body>
+  <div class="app-wrapper">
+    <header class="top-header"></header>
 
-<div class="app-shell">
-  <div id="rail-mount"></div>
+    <div class="main-layout">
+      <aside class="left-sidebar"></aside>
 
-  <main class="main route-fade" style="max-width: 760px;">
-    <div id="group-header">
-      <div class="skeleton" style="height:24px; width:40%; margin-bottom:var(--space-3);"></div>
-      <div class="skeleton" style="height:80px;"></div>
+      <main class="content-stream">
+        <div style="margin-bottom: 0.5rem;">
+          <a href="/pages/groups.html" class="btn btn-ghost btn-sm" style="padding-left: 0;">← Back to Study Groups</a>
+        </div>
+
+        <div id="group-header-card"></div>
+
+        <div style="display: grid; grid-template-columns: 1fr 280px; gap: 1.5rem; margin-top: 1.5rem;" id="group-main-grid">
+          <!-- Chat / Message stream -->
+          <div class="card" style="display: flex; flex-direction: column; height: 550px;">
+            <div style="padding-bottom: 0.75rem; border-bottom: 1px solid var(--border-color); font-weight: 700;">
+              Group Messages & Notes
+            </div>
+
+            <div id="group-messages-container" style="flex: 1; overflow-y: auto; padding: 1rem 0; display: flex; flex-direction: column; gap: 0.75rem;">
+              <!-- Messages -->
+            </div>
+
+            <form id="group-msg-form" style="padding-top: 0.75rem; border-top: 1px solid var(--border-color); display: flex; gap: 0.5rem;">
+              <input type="text" id="msg-input" class="input-field" placeholder="Share a note, question, or study update..." required />
+              <button type="submit" id="msg-submit-btn" class="btn btn-primary btn-sm">Send</button>
+            </form>
+          </div>
+
+          <!-- Members Sidebar -->
+          <div class="card" style="height: fit-content;">
+            <div style="font-weight: 700; font-size: 0.9375rem; margin-bottom: 0.75rem;" id="members-list-title">Group Members (0)</div>
+            <div id="group-members-list" style="display: flex; flex-direction: column; gap: 0.5rem; max-height: 400px; overflow-y: auto;"></div>
+          </div>
+        </div>
+      </main>
+
+      <aside class="right-rail"></aside>
     </div>
+  </div>
 
-    <div id="tabs" class="category-chips" style="margin: var(--space-5) 0 var(--space-4);"></div>
-    <div id="tab-content"></div>
-  </main>
-</div>
-
-<div id="tabbar-mount"></div>
-
-<script type="module" src="../src/js/group.js"></script>
+  <script type="module" src="/src/js/pages/group.js"></script>
 </body>
 </html>

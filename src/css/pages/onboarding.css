@@ -1,66 +1,115 @@
-/* UniCircle — onboarding.css */
-
-.onboard-card { min-height: 420px; }
-
-.onboard-progress {
-  display: flex;
-  gap: 6px;
-  margin-bottom: var(--space-2);
+/* Onboarding Wizard Styling */
+.onboarding-container {
+  max-width: 640px;
+  width: 100%;
+  margin: 3rem auto;
+  padding: 0 1.5rem;
 }
 
-.onboard-progress span {
-  flex: 1;
-  height: 3px;
-  border-radius: 2px;
-  background: var(--line);
-  transition: background 200ms ease;
-}
-
-.onboard-progress span.done { background: var(--cobalt); }
-.onboard-progress span.current { background: var(--chartreuse); }
-
-.onboard-actions {
+.step-indicator-bar {
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  margin-top: var(--space-5);
+  margin-bottom: 2rem;
+  position: relative;
 }
 
-.ob-results {
+.step-node {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: var(--radius-full);
+  background: var(--bg-surface-elevated);
+  border: 2px solid var(--border-color);
+  color: var(--text-tertiary);
+  font-weight: 700;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+  transition: all var(--transition-normal);
+}
+
+.step-node.active {
+  background: var(--brand-primary);
+  border-color: var(--brand-primary);
+  color: #ffffff;
+  box-shadow: var(--brand-glow);
+  transform: scale(1.15);
+}
+
+.step-node.completed {
+  background: var(--accent-green);
+  border-color: var(--accent-green);
+  color: #ffffff;
+}
+
+.step-progress-line {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--border-color);
+  z-index: 1;
+  transform: translateY(-50%);
+}
+
+.step-progress-fill {
+  height: 100%;
+  background: var(--brand-gradient);
+  transition: width 400ms cubic-bezier(0.16, 1, 0.3, 1);
+  width: 0%;
+}
+
+.onboarding-step {
+  display: none;
+  animation: slideUp 350ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.onboarding-step.active {
+  display: block;
+}
+
+.selection-grid {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  max-height: 220px;
+  gap: 0.75rem;
+  max-height: 260px;
   overflow-y: auto;
-  margin-bottom: var(--space-4);
+  margin: 1rem 0;
+  padding-right: 0.25rem;
 }
 
-.ob-result {
-  text-align: left;
-  padding: var(--space-3);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-md);
-  background: var(--paper);
-  cursor: pointer;
-  font-size: var(--text-sm);
-  transition: border-color 120ms ease, background 120ms ease;
-}
-
-.ob-result:hover { border-color: var(--cobalt); background: var(--cobalt-dim); }
-
-.ob-result-add { color: var(--cobalt); font-weight: 600; border-style: dashed; }
-
-.ob-chip-row {
+.selection-item {
   display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-  margin-bottom: var(--space-2);
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.875rem 1.25rem;
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: all var(--transition-fast);
 }
 
-.ob-chip-row .chip { gap: 6px; }
-.ob-chip-row .chip button {
-  background: none; border: none; cursor: pointer;
-  color: var(--cobalt); font-weight: 700; font-size: var(--text-sm); line-height: 1;
-  padding: 0;
+.selection-item:hover {
+  border-color: var(--border-color-hover);
+  background: var(--bg-surface-hover);
+  transform: translateX(4px);
 }
 
-.onboard-done { text-align: center; padding: var(--space-6) 0; }
+.selection-item.selected {
+  border-color: var(--brand-primary);
+  background: var(--brand-primary-light);
+  color: var(--text-primary);
+}
+
+.add-custom-box {
+  background: var(--bg-surface-elevated);
+  border: 1px dashed var(--border-color-hover);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  margin-top: 1rem;
+}

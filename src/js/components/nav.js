@@ -1,97 +1,337 @@
-// UniCircle — nav.js
-// Renders the left rail (desktop) and bottom tab bar (mobile) for every
-// authenticated page. Call mountAppShell(activePage, profile) once the
-// page's profile has loaded.
+// UniCircle Global Navigation & Identity Components
+import { auth } from '../auth.js';
+import { api } from '../api.js';
+import { modal } from './modal.js';
+import { toast } from './toast.js';
+import { THEMES, setTheme, getInitials } from '../config.js';
 
-import { logOut } from "../auth.js";
-import { supabase } from "../api.js";
+export function renderNavigation(activePage = '') {
+  const user = auth.getUser();
+  const currentPath = window.location.pathname;
 
-function applyTheme(mode) {
-  localStorage.setItem("unicircle_theme", mode);
-  const resolved = mode === "system"
-    ? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
-    : mode;
-  document.documentElement.setAttribute("data-theme", resolved);
-}
+  // 1. TOP HEADER
+  const topHeader = document.querySelector('.top-header');
+  if (topHeader) {
+    topHeader.innerHTML = `
+      <a href="/pages/home.html" class="header-brand">
+        <div class="brand-icon-wrap">🎓</div>
+        <span>Uni<span class="text-gradient">Circle</span></span>
+      </a>
 
-/** Reconcile the local theme cache with the database in the background —
- * covers "changed theme on another device" without blocking first paint,
- * since the blocking <head> script already applied the cached value. */
-async function syncTheme(userId) {
-  const { data } = await supabase.from("user_settings").select("appearance").eq("user_id", userId).maybeSingle();
-  if (data?.appearance && data.appearance !== localStorage.getItem("unicircle_theme")) {
-    applyTheme(data.appearance);
-  }
-}
+      <div class="header-search">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="global-search-input" placeholder="Search discussions, courses, communities..." />
+      </div>
 
-const LINKS = [
-  { id: "home", label: "Home", href: "home.html", icon: "home" },
-  { id: "communities", label: "Communities", href: "communities.html", icon: "communities" },
-  { id: "create", label: "Create", href: "discussions.html#new", icon: "create" },
-  { id: "notifications", label: "Notifications", href: "notifications.html", icon: "bell" },
-  { id: "profile", label: "Profile", href: "profile.html", icon: "user" },
-];
-
-// Desktop rail gets two extra entries (Search, Study Groups) that mobile's
-// tab bar omits — mobile stays exactly the 5 links above, per spec.
-const RAIL_EXTRA_AFTER_HOME = { id: "search", label: "Search", href: "search.html", icon: "search" };
-const RAIL_EXTRA_AFTER_COMMUNITIES = { id: "study-groups", label: "Study Groups", href: "study-groups.html", icon: "groups" };
-
-const ICONS = {
-  home: '<path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/>',
-  communities: '<circle cx="8" cy="8" r="3"/><circle cx="16" cy="16" r="3"/><path d="M10.5 9.5 13.5 14.5"/>',
-  create: '<path d="M12 5v14M5 12h14"/>',
-  bell: '<path d="M6 9a6 6 0 1 1 12 0c0 4 1.5 5.5 1.5 5.5H4.5S6 13 6 9Z"/><path d="M10 20a2 2 0 0 0 4 0"/>',
-  user: '<circle cx="12" cy="8" r="3.5"/><path d="M5 20c1-4 4.5-6 7-6s6 2 7 6"/>',
-  search: '<circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/>',
-  groups: '<circle cx="9" cy="8" r="3"/><path d="M3 19c.7-3 3-5 6-5s5.3 2 6 5"/><path d="M16 4.5c1.7.3 3 1.8 3 3.5s-1.3 3.2-3 3.5"/><path d="M18.5 14c1.8.4 3.2 1.9 3.5 4"/>',
-};
-
-function icon(name, size = 18) {
-  return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${ICONS[name] || ""}</svg>`;
-}
-
-function initials(name) {
-  if (!name) return "?";
-  return name.trim().split(/\s+/).slice(0, 2).map(w => w[0].toUpperCase()).join("");
-}
-
-export function mountAppShell(activePage, profile) {
-  if (profile?.id) syncTheme(profile.id);
-
-  const railMount = document.getElementById("rail-mount");
-  const tabMount = document.getElementById("tabbar-mount");
-
-  if (railMount) {
-    const railLinks = [LINKS[0], RAIL_EXTRA_AFTER_HOME, LINKS[1], RAIL_EXTRA_AFTER_COMMUNITIES, ...LINKS.slice(2)];
-    railMount.innerHTML = `
-      <nav class="rail" aria-label="Main navigation">
-        <a href="home.html" class="rail-brand"><span class="dot">●</span> UniCircle</a>
-        <ul class="rail-nav">
-          ${railLinks.map(l => `
-            <li>
-              <a href="${l.href}" class="rail-link ${activePage === l.id ? "active" : ""}">
-                ${icon(l.icon)} ${l.label}
-              </a>
-            </li>`).join("")}
-        </ul>
-        <div class="rail-footer">
-          <a href="profile.html" class="rail-link" style="align-items:center;">
-            <span class="avatar-chip">${initials(profile?.name)}</span> ${profile?.name || "Your profile"}
-          </a>
-          <button class="btn btn-ghost btn-block" id="rail-logout">Log out</button>
+      <div class="header-actions">
+        <!-- Theme Selector Dropdown -->
+        <div style="position: relative;" id="theme-selector-wrap">
+          <button id="theme-toggle-btn" class="btn btn-secondary btn-icon" title="Change Theme">
+            🎨
+          </button>
+          <div id="theme-dropdown" class="card" style="display: none; position: absolute; right: 0; top: 3.25rem; width: 180px; padding: 0.5rem; z-index: 200; box-shadow: var(--shadow-xl);">
+            <div style="font-size: 0.75rem; font-weight: 700; color: var(--text-tertiary); padding: 0.25rem 0.5rem; text-transform: uppercase;">Select Theme</div>
+            ${THEMES.map(t => `
+              <button class="theme-option-btn btn-ghost" data-theme-id="${t.id}" style="width: 100%; display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem; border-radius: var(--radius-sm); font-size: 0.8125rem; text-align: left;">
+                <span>${t.icon}</span>
+                <span>${t.name}</span>
+              </button>
+            `).join('')}
+          </div>
         </div>
-      </nav>`;
-    document.getElementById("rail-logout")?.addEventListener("click", () => logOut());
+
+        ${user ? `
+          <!-- Notifications Bell -->
+          <div class="notif-btn-wrap">
+            <a href="/pages/notifications.html" class="btn btn-secondary btn-icon" title="Notifications">
+              🔔
+            </a>
+            <span id="notif-badge-count" class="notif-badge" style="display: none;">0</span>
+          </div>
+
+          <!-- User Profile Dropdown -->
+          <div style="position: relative;" id="user-menu-wrap">
+            <button id="user-menu-btn" style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+              <div class="avatar avatar-sm" style="background-color: ${user.avatar_color || 'var(--brand-primary)'};">
+                ${getInitials(user.name)}
+              </div>
+            </button>
+            <div id="user-dropdown" class="card" style="display: none; position: absolute; right: 0; top: 3.25rem; width: 220px; padding: 0.75rem; z-index: 200; box-shadow: var(--shadow-xl);">
+              <div style="padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-color); margin-bottom: 0.5rem;">
+                <div style="font-weight: 700; font-size: 0.9375rem; color: var(--text-primary);">${user.name}</div>
+                <div style="font-size: 0.75rem; color: var(--text-tertiary);">@${user.username}</div>
+              </div>
+              <a href="/pages/profile.html" class="nav-link" style="padding: 0.4rem 0.6rem; font-size: 0.875rem;">👤 My Profile</a>
+              <a href="/pages/saved.html" class="nav-link" style="padding: 0.4rem 0.6rem; font-size: 0.875rem;">🔖 Saved Posts</a>
+              <a href="/pages/activity.html" class="nav-link" style="padding: 0.4rem 0.6rem; font-size: 0.875rem;">⚡ My Activity</a>
+              <a href="/pages/settings.html" class="nav-link" style="padding: 0.4rem 0.6rem; font-size: 0.875rem;">⚙️ Settings</a>
+              ${user.role === 'admin' || user.role === 'moderator' ? `
+                <a href="/pages/admin.html" class="nav-link" style="padding: 0.4rem 0.6rem; font-size: 0.875rem; color: var(--accent-rose);">🛡️ Admin & Mod</a>
+              ` : ''}
+              <div style="border-top: 1px solid var(--border-color); margin-top: 0.5rem; padding-top: 0.5rem;">
+                <button id="logout-btn" class="nav-link" style="width: 100%; text-align: left; padding: 0.4rem 0.6rem; font-size: 0.875rem; color: var(--accent-rose);">🚪 Log Out</button>
+              </div>
+            </div>
+          </div>
+        ` : `
+          <a href="/pages/login.html" class="btn btn-secondary btn-sm">Log In</a>
+          <a href="/pages/signup.html" class="btn btn-primary btn-sm">Join UniCircle</a>
+        `}
+      </div>
+    `;
+
+    // Search Enter listener
+    const searchInput = topHeader.querySelector('#global-search-input');
+    if (searchInput) {
+      searchInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && searchInput.value.trim()) {
+          window.location.href = `/pages/search.html?q=${encodeURIComponent(searchInput.value.trim())}`;
+        }
+      });
+    }
+
+    // Theme dropdown toggles
+    const themeBtn = topHeader.querySelector('#theme-toggle-btn');
+    const themeDropdown = topHeader.querySelector('#theme-dropdown');
+    if (themeBtn && themeDropdown) {
+      themeBtn.onclick = (e) => {
+        e.stopPropagation();
+        themeDropdown.style.display = themeDropdown.style.display === 'none' ? 'block' : 'none';
+      };
+      themeDropdown.querySelectorAll('.theme-option-btn').forEach(btn => {
+        btn.onclick = () => {
+          setTheme(btn.dataset.themeId);
+          themeDropdown.style.display = 'none';
+        };
+      });
+    }
+
+    // User dropdown toggles
+    const userBtn = topHeader.querySelector('#user-menu-btn');
+    const userDropdown = topHeader.querySelector('#user-dropdown');
+    if (userBtn && userDropdown) {
+      userBtn.onclick = (e) => {
+        e.stopPropagation();
+        userDropdown.style.display = userDropdown.style.display === 'none' ? 'block' : 'none';
+      };
+    }
+
+    const logoutBtn = topHeader.querySelector('#logout-btn');
+    if (logoutBtn) {
+      logoutBtn.onclick = () => auth.logout();
+    }
+
+    document.addEventListener('click', () => {
+      if (themeDropdown) themeDropdown.style.display = 'none';
+      if (userDropdown) userDropdown.style.display = 'none';
+    });
   }
 
-  if (tabMount) {
-    tabMount.innerHTML = `
-      <nav class="tab-bar" aria-label="Main navigation">
-        ${LINKS.map(l => `
-          <a href="${l.href}" class="tab-link ${activePage === l.id ? "active" : ""}">
-            ${icon(l.icon, 20)}<span>${l.label}</span>
-          </a>`).join("")}
-      </nav>`;
+  // 2. LEFT SIDEBAR
+  const leftSidebar = document.querySelector('.left-sidebar');
+  if (leftSidebar && user) {
+    leftSidebar.innerHTML = `
+      <div style="margin-bottom: 0.5rem;">
+        <button id="sidebar-new-post-btn" class="btn btn-primary btn-interactive" style="width: 100%; padding: 0.8rem 1rem; font-size: 0.9375rem; box-shadow: var(--brand-glow);">
+          <span>✍️</span>
+          <span>New Discussion</span>
+        </button>
+      </div>
+
+      <nav class="nav-menu">
+        <a href="/pages/home.html" class="nav-link ${activePage === 'home' ? 'active' : ''}">
+          <span class="nav-icon">🏠</span>
+          <span>Home Feed</span>
+        </a>
+        <a href="/pages/discussions.html" class="nav-link ${activePage === 'discussions' ? 'active' : ''}">
+          <span class="nav-icon">💬</span>
+          <span>Discussions</span>
+        </a>
+        <a href="/pages/communities.html" class="nav-link ${activePage === 'communities' ? 'active' : ''}">
+          <span class="nav-icon">🏛️</span>
+          <span>Communities</span>
+        </a>
+        <a href="/pages/groups.html" class="nav-link ${activePage === 'groups' ? 'active' : ''}">
+          <span class="nav-icon">👥</span>
+          <span>Study Groups</span>
+        </a>
+        <a href="/pages/saved.html" class="nav-link ${activePage === 'saved' ? 'active' : ''}">
+          <span class="nav-icon">🔖</span>
+          <span>Saved Posts</span>
+        </a>
+        <a href="/pages/activity.html" class="nav-link ${activePage === 'activity' ? 'active' : ''}">
+          <span class="nav-icon">⚡</span>
+          <span>My Activity</span>
+        </a>
+        <a href="/pages/settings.html" class="nav-link ${activePage === 'settings' ? 'active' : ''}">
+          <span class="nav-icon">⚙️</span>
+          <span>Settings</span>
+        </a>
+        ${user.role === 'admin' || user.role === 'moderator' ? `
+          <a href="/pages/admin.html" class="nav-link ${activePage === 'admin' ? 'active' : ''}" style="color: var(--accent-rose);">
+            <span class="nav-icon">🛡️</span>
+            <span>Moderation</span>
+          </a>
+        ` : ''}
+      </nav>
+
+      <!-- Enrolled Courses Quick List -->
+      ${user.courses && user.courses.length > 0 ? `
+        <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border-color);">
+          <div style="font-size: 0.75rem; font-weight: 700; color: var(--text-tertiary); text-transform: uppercase; margin-bottom: 0.625rem;">My Courses</div>
+          <div style="display: flex; flex-direction: column; gap: 0.25rem;">
+            ${user.courses.map(c => `
+              <a href="/pages/course.html?id=${c.id}" class="nav-link" style="padding: 0.4rem 0.6rem; font-size: 0.8125rem;">
+                <span class="badge badge-course" style="font-size: 0.6875rem;">${c.code}</span>
+                <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${c.name}</span>
+              </a>
+            `).join('')}
+          </div>
+        </div>
+      ` : ''}
+    `;
+
+    const newPostBtn = leftSidebar.querySelector('#sidebar-new-post-btn');
+    if (newPostBtn) {
+      newPostBtn.onclick = () => modal.showCreateDiscussionModal();
+    }
+  }
+
+  // 3. RIGHT RAIL: ACADEMIC IDENTITY CARD
+  const rightRail = document.querySelector('.right-rail');
+  if (rightRail && user) {
+    rightRail.innerHTML = `
+      <div class="identity-card animate-fade-in">
+        <div class="identity-header">
+          <div class="avatar avatar-md" style="background-color: ${user.avatar_color || 'var(--brand-primary)'};">
+            ${getInitials(user.name)}
+          </div>
+          <div>
+            <div style="font-weight: 700; font-size: 0.9375rem; color: var(--text-primary);">${user.name}</div>
+            <div style="font-size: 0.75rem; color: var(--text-tertiary);">@${user.username}</div>
+          </div>
+        </div>
+
+        <div style="border-top: 1px solid var(--border-color); padding-top: 0.5rem;">
+          <div class="identity-item">
+            <span class="identity-label">Institution:</span>
+            <span class="identity-val">${user.institution_name || 'Not set'}</span>
+          </div>
+          <div class="identity-item">
+            <span class="identity-label">Faculty:</span>
+            <span class="identity-val">${user.faculty_name || 'Not set'}</span>
+          </div>
+          <div class="identity-item">
+            <span class="identity-label">Program:</span>
+            <span class="identity-val">${user.program_name || 'Not set'}</span>
+          </div>
+          <div class="identity-item">
+            <span class="identity-label">Year:</span>
+            <span class="identity-val">${user.academic_year || 'Year 1'}</span>
+          </div>
+        </div>
+
+        <div style="margin-top: 1rem;">
+          <a href="/pages/settings.html" class="btn btn-secondary btn-sm" style="width: 100%;">Edit Identity</a>
+        </div>
+      </div>
+
+      <!-- Quick Actions Card -->
+      <div class="card" style="padding: 1.25rem;">
+        <div style="font-weight: 700; font-size: 0.875rem; color: var(--text-primary); margin-bottom: 0.75rem;">⚡ Quick Actions</div>
+        <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+          <button id="quick-create-disc-btn" class="btn btn-secondary btn-sm" style="justify-content: flex-start;">✍️ Ask a Question</button>
+          <button id="quick-create-grp-btn" class="btn btn-secondary btn-sm" style="justify-content: flex-start;">👥 Form Study Group</button>
+          <a href="/pages/communities.html" class="btn btn-secondary btn-sm" style="justify-content: flex-start;">🏛️ Browse Communities</a>
+        </div>
+      </div>
+    `;
+
+    const quickDiscBtn = rightRail.querySelector('#quick-create-disc-btn');
+    if (quickDiscBtn) quickDiscBtn.onclick = () => modal.showCreateDiscussionModal();
+    const quickGrpBtn = rightRail.querySelector('#quick-create-grp-btn');
+    if (quickGrpBtn) quickGrpBtn.onclick = () => modal.showCreateGroupModal();
+  }
+
+  // 4. MOBILE BOTTOM NAVIGATION BAR
+  let mobileNav = document.querySelector('.mobile-nav-bar');
+  if (!mobileNav) {
+    mobileNav = document.createElement('div');
+    mobileNav.className = 'mobile-nav-bar';
+    document.body.appendChild(mobileNav);
+  }
+
+  mobileNav.innerHTML = `
+    <a href="/pages/home.html" class="mobile-nav-item ${activePage === 'home' ? 'active' : ''}">
+      <span class="mobile-nav-icon">🏠</span>
+      <span>Home</span>
+    </a>
+    <a href="/pages/communities.html" class="mobile-nav-item ${activePage === 'communities' ? 'active' : ''}">
+      <span class="mobile-nav-icon">🏛️</span>
+      <span>Communities</span>
+    </a>
+    <button id="mobile-create-post-btn" class="mobile-create-btn" title="Create Discussion">
+      +
+    </button>
+    <a href="/pages/notifications.html" class="mobile-nav-item ${activePage === 'notifications' ? 'active' : ''}">
+      <span class="mobile-nav-icon">🔔</span>
+      <span>Alerts</span>
+    </a>
+    <a href="/pages/profile.html" class="mobile-nav-item ${activePage === 'profile' ? 'active' : ''}">
+      <span class="mobile-nav-icon">👤</span>
+      <span>Profile</span>
+    </a>
+  `;
+
+  const mobileCreateBtn = mobileNav.querySelector('#mobile-create-post-btn');
+  if (mobileCreateBtn) {
+    mobileCreateBtn.onclick = () => modal.showCreateDiscussionModal();
+  }
+
+  // Initialize live notifications check & SSE
+  if (user) {
+    initNotificationsStream();
+  }
+}
+
+// REAL-TIME NOTIFICATIONS
+async function initNotificationsStream() {
+  const token = localStorage.getItem('unicircle_token');
+  if (!token) return;
+
+  // Initial unread fetch
+  try {
+    const data = await api.get('/notifications?unread_only=true');
+    updateNotifBadge(data.unread_count);
+  } catch (e) {}
+
+  // Setup SSE stream
+  try {
+    const evtSource = new EventSource(`/api/notifications/stream?token=${encodeURIComponent(token)}`);
+    evtSource.addEventListener('notification', (e) => {
+      try {
+        const notif = JSON.parse(e.data);
+        toast.info(`🔔 ${notif.title}: ${notif.message}`, 5000);
+        // Increment badge
+        const badge = document.getElementById('notif-badge-count');
+        if (badge) {
+          const current = parseInt(badge.textContent, 10) || 0;
+          updateNotifBadge(current + 1);
+        }
+      } catch (err) {}
+    });
+  } catch (err) {
+    console.warn('SSE connection error:', err);
+  }
+}
+
+function updateNotifBadge(count) {
+  const badge = document.getElementById('notif-badge-count');
+  if (!badge) return;
+  if (count > 0) {
+    badge.textContent = count > 99 ? '99+' : count;
+    badge.style.display = 'flex';
+  } else {
+    badge.style.display = 'none';
   }
 }

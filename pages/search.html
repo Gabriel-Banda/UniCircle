@@ -1,33 +1,47 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
-<script>(function(){try{var t=localStorage.getItem('unicircle_theme')||'system';var r=t==='system'?(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):t;document.documentElement.setAttribute('data-theme',r);}catch(e){}})();</script>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Search — UniCircle</title>
-<link rel="stylesheet" href="../src/css/base.css">
-<link rel="stylesheet" href="../src/css/layout.css">
-<link rel="stylesheet" href="../src/css/components.css">
-<link rel="stylesheet" href="../src/css/animations.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Global Search — UniCircle</title>
+  <link rel="stylesheet" href="/src/css/base.css" />
+  <link rel="stylesheet" href="/src/css/animations.css" />
+  <link rel="stylesheet" href="/src/css/components.css" />
+  <link rel="stylesheet" href="/src/css/layout.css" />
 </head>
 <body>
+  <div class="app-wrapper">
+    <header class="top-header"></header>
 
-<div class="app-shell">
-  <div id="rail-mount"></div>
+    <div class="main-layout">
+      <aside class="left-sidebar"></aside>
 
-  <main class="main route-fade" style="max-width: 640px;">
-    <h1>Search</h1>
-    <div class="field">
-      <input id="search-input" placeholder="Search discussions, people, communities, courses…" autofocus>
+      <main class="content-stream">
+        <div>
+          <h1 style="font-size: 1.75rem;">Global Search</h1>
+          <p style="font-size: 0.9375rem;">Search across all discussions, courses, communities, study groups, and classmates.</p>
+        </div>
+
+        <div style="position: relative;">
+          <input type="text" id="search-main-input" class="input-field" placeholder="Search keywords, course codes, questions..." style="font-size: 1.1rem; padding: 0.875rem 1.25rem;" autofocus />
+        </div>
+
+        <div class="tab-nav">
+          <button class="tab-item active" data-type="all">All Results</button>
+          <button class="tab-item" data-type="discussions">💬 Discussions</button>
+          <button class="tab-item" data-type="courses">📖 Courses</button>
+          <button class="tab-item" data-type="communities">🏛️ Communities</button>
+          <button class="tab-item" data-type="groups">👥 Study Groups</button>
+          <button class="tab-item" data-type="users">🎓 Classmates</button>
+        </div>
+
+        <div id="search-results-container" class="stagger-container" style="display: flex; flex-direction: column; gap: 1rem;"></div>
+      </main>
+
+      <aside class="right-rail"></aside>
     </div>
-    <div id="type-tabs" class="category-chips" style="margin: var(--space-4) 0 var(--space-5);"></div>
-    <div id="recent-searches" style="margin-bottom: var(--space-5);"></div>
-    <div id="search-results"></div>
-  </main>
-</div>
+  </div>
 
-<div id="tabbar-mount"></div>
-
-<script type="module" src="../src/js/search.js"></script>
+  <script type="module" src="/src/js/pages/search.js"></script>
 </body>
 </html>

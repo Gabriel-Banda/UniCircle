@@ -1,44 +1,37 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
-<script>(function(){try{var t=localStorage.getItem('unicircle_theme')||'system';var r=t==='system'?(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):t;document.documentElement.setAttribute('data-theme',r);}catch(e){}})();</script>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Profile — UniCircle</title>
-<link rel="stylesheet" href="../src/css/base.css">
-<link rel="stylesheet" href="../src/css/layout.css">
-<link rel="stylesheet" href="../src/css/components.css">
-<link rel="stylesheet" href="../src/css/animations.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Profile — UniCircle</title>
+  <link rel="stylesheet" href="/src/css/base.css" />
+  <link rel="stylesheet" href="/src/css/animations.css" />
+  <link rel="stylesheet" href="/src/css/components.css" />
+  <link rel="stylesheet" href="/src/css/layout.css" />
 </head>
 <body>
+  <div class="app-wrapper">
+    <header class="top-header"></header>
 
-<div class="app-shell">
-  <div id="rail-mount"></div>
+    <div class="main-layout">
+      <aside class="left-sidebar"></aside>
 
-  <main class="main route-fade" style="max-width: 720px;">
-    <div id="profile-header">
-      <div class="skeleton" style="height:64px; margin-bottom: var(--space-4);"></div>
+      <main class="content-stream">
+        <div id="profile-card-container"></div>
+
+        <div class="tab-nav" style="margin-top: 1.5rem;">
+          <button class="tab-item active" data-tab="discussions">💬 Discussions</button>
+          <button class="tab-item" data-tab="courses">📖 Enrolled Courses</button>
+          <button class="tab-item" data-tab="activity">⚡ Activity</button>
+        </div>
+
+        <div id="profile-tab-content" class="stagger-container"></div>
+      </main>
+
+      <aside class="right-rail"></aside>
     </div>
+  </div>
 
-    <section class="dash-section" style="margin-top: var(--space-6);">
-      <h3>Courses</h3>
-      <div id="profile-courses"></div>
-    </section>
-
-    <section class="dash-section">
-      <h3>Study Groups</h3>
-      <div id="profile-groups"></div>
-    </section>
-
-    <section class="dash-section">
-      <h3>Discussions</h3>
-      <div id="profile-discussions"></div>
-    </section>
-  </main>
-</div>
-
-<div id="tabbar-mount"></div>
-
-<script type="module" src="../src/js/profile.js"></script>
+  <script type="module" src="/src/js/pages/profile.js"></script>
 </body>
 </html>

@@ -1,33 +1,43 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
-<script>(function(){try{var t=localStorage.getItem('unicircle_theme')||'system';var r=t==='system'?(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):t;document.documentElement.setAttribute('data-theme',r);}catch(e){}})();</script>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Community — UniCircle</title>
-<link rel="stylesheet" href="../src/css/base.css">
-<link rel="stylesheet" href="../src/css/layout.css">
-<link rel="stylesheet" href="../src/css/components.css">
-<link rel="stylesheet" href="../src/css/animations.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Community Hub — UniCircle</title>
+  <link rel="stylesheet" href="/src/css/base.css" />
+  <link rel="stylesheet" href="/src/css/animations.css" />
+  <link rel="stylesheet" href="/src/css/components.css" />
+  <link rel="stylesheet" href="/src/css/layout.css" />
 </head>
 <body>
+  <div class="app-wrapper">
+    <header class="top-header"></header>
 
-<div class="app-shell">
-  <div id="rail-mount"></div>
+    <div class="main-layout">
+      <aside class="left-sidebar"></aside>
 
-  <main class="main route-fade" style="max-width: 760px;">
-    <div id="community-header">
-      <div class="skeleton" style="height:24px; width:40%; margin-bottom:var(--space-3);"></div>
-      <div class="skeleton" style="height:80px;"></div>
+      <main class="content-stream">
+        <div style="margin-bottom: 0.5rem;">
+          <a href="/pages/communities.html" class="btn btn-ghost btn-sm" style="padding-left: 0;">← Back to All Communities</a>
+        </div>
+
+        <div id="community-header-card"></div>
+
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 1rem;">
+          <h3 style="font-size: 1.25rem;">Discussions in this Community</h3>
+          <button id="comm-new-disc-btn" class="btn btn-primary btn-sm btn-interactive">
+            <span>✍️</span>
+            <span>Post in Community</span>
+          </button>
+        </div>
+
+        <div id="community-discussions-container" class="stagger-container" style="display: flex; flex-direction: column; gap: 1rem; margin-top: 1rem;"></div>
+      </main>
+
+      <aside class="right-rail"></aside>
     </div>
+  </div>
 
-    <div id="tabs" class="category-chips" style="margin: var(--space-5) 0 var(--space-4);"></div>
-    <div id="tab-content"></div>
-  </main>
-</div>
-
-<div id="tabbar-mount"></div>
-
-<script type="module" src="../src/js/community.js"></script>
+  <script type="module" src="/src/js/pages/community.js"></script>
 </body>
 </html>

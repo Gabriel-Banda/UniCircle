@@ -1,51 +1,81 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
-<script>(function(){try{var t=localStorage.getItem('unicircle_theme')||'system';var r=t==='system'?(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):t;document.documentElement.setAttribute('data-theme',r);}catch(e){}})();</script>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Home — UniCircle</title>
-<link rel="stylesheet" href="../src/css/base.css">
-<link rel="stylesheet" href="../src/css/layout.css">
-<link rel="stylesheet" href="../src/css/components.css">
-<link rel="stylesheet" href="../src/css/animations.css">
-<link rel="stylesheet" href="../src/css/pages/home.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Home Feed — UniCircle</title>
+  <link rel="stylesheet" href="/src/css/base.css" />
+  <link rel="stylesheet" href="/src/css/animations.css" />
+  <link rel="stylesheet" href="/src/css/components.css" />
+  <link rel="stylesheet" href="/src/css/layout.css" />
 </head>
 <body>
+  <div class="app-wrapper">
+    <!-- Top Header -->
+    <header class="top-header"></header>
 
-<div class="app-shell">
-  <div id="rail-mount"></div>
+    <div class="main-layout">
+      <!-- Left Navigation Sidebar -->
+      <aside class="left-sidebar"></aside>
 
-  <main class="main route-fade">
-    <h1 id="welcome-heading">Welcome 👋</h1>
-    <p class="meta" style="margin-bottom: var(--space-6);">Here's what's happening in your academic community.</p>
+      <!-- Center Feed Stream -->
+      <main class="content-stream">
+        <!-- Personalized Welcome Banner -->
+        <div class="card animate-fade-in" style="background: linear-gradient(135deg, var(--bg-surface) 0%, var(--bg-surface-elevated) 100%); border-left: 4px solid var(--brand-primary);">
+          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+            <div>
+              <h2 id="user-greeting" style="font-size: 1.5rem; margin-bottom: 0.25rem;">Welcome to UniCircle 👋</h2>
+              <p id="user-community-subtitle" style="font-size: 0.9375rem; color: var(--text-secondary);">Here's what's happening in your academic community.</p>
+            </div>
+            <button id="home-create-post-btn" class="btn btn-primary btn-interactive">
+              <span>✍️</span>
+              <span>Ask or Share</span>
+            </button>
+          </div>
+        </div>
 
-    <section class="dash-section enter">
-      <h3>My Community</h3>
-      <div id="my-community"></div>
-    </section>
+        <!-- Enrolled Courses Quick Strip -->
+        <div id="enrolled-courses-section" style="display: none;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
+            <h4 style="font-size: 1rem;">My Courses</h4>
+            <a href="/pages/communities.html" style="font-size: 0.8125rem; color: var(--brand-primary); font-weight: 600;">Browse All</a>
+          </div>
+          <div id="enrolled-courses-strip" style="display: flex; gap: 0.75rem; overflow-x: auto; padding-bottom: 0.5rem;">
+            <!-- Courses populated here -->
+          </div>
+        </div>
 
-    <section class="dash-section enter">
-      <h3>My Courses</h3>
-      <div id="my-courses"></div>
-    </section>
+        <!-- Category Pills Filter Bar -->
+        <div style="display: flex; gap: 0.5rem; overflow-x: auto; padding-bottom: 0.25rem;" id="category-pills-bar">
+          <!-- Category pills populated here -->
+        </div>
 
-    <div class="grid grid-2">
-      <section class="dash-section enter">
-        <h3>Recent Discussions</h3>
-        <div id="recent-discussions" class="discussion-list"></div>
-      </section>
+        <!-- Feed Scope Tabs & Sort -->
+        <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">
+          <div class="tab-nav" style="border-bottom: none; margin-bottom: 0; padding-bottom: 0;">
+            <button class="tab-item active" data-filter="all">Institution Feed</button>
+            <button class="tab-item" data-filter="my-courses">My Courses</button>
+            <button class="tab-item" data-filter="questions">Questions Only</button>
+          </div>
 
-      <section class="dash-section enter">
-        <h3>Recommended Communities</h3>
-        <div id="recommended-communities"></div>
-      </section>
+          <select id="feed-sort-select" class="select-field" style="width: auto; padding: 0.35rem 2rem 0.35rem 0.75rem; font-size: 0.8125rem;">
+            <option value="recent">Most Recent</option>
+            <option value="popular">Most Upvoted</option>
+            <option value="unanswered">Unanswered</option>
+          </select>
+        </div>
+
+        <!-- Main Discussions Feed List -->
+        <div id="discussions-feed" class="stagger-container" style="display: flex; flex-direction: column; gap: 1rem;">
+          <!-- Skeleton Loading / Real discussions populated here -->
+        </div>
+      </main>
+
+      <!-- Right Academic Identity Rail -->
+      <aside class="right-rail"></aside>
     </div>
-  </main>
-</div>
+  </div>
 
-<div id="tabbar-mount"></div>
-
-<script type="module" src="../src/js/home.js"></script>
+  <script type="module" src="/src/js/pages/home.js"></script>
 </body>
 </html>

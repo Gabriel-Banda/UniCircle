@@ -1,72 +1,261 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
-<script>(function(){try{var t=localStorage.getItem('unicircle_theme')||'system';var r=t==='system'?(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):t;document.documentElement.setAttribute('data-theme',r);}catch(e){}})();</script>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>UniCircle — Your university. Your people. Your conversations.</title>
-<link rel="stylesheet" href="src/css/base.css">
-<link rel="stylesheet" href="src/css/layout.css">
-<link rel="stylesheet" href="src/css/components.css">
-<link rel="stylesheet" href="src/css/animations.css">
-<link rel="stylesheet" href="src/css/pages/landing.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UniCircle — Student Discussion Platform</title>
+  <link rel="stylesheet" href="/src/css/base.css" />
+  <link rel="stylesheet" href="/src/css/animations.css" />
+  <link rel="stylesheet" href="/src/css/components.css" />
+  <link rel="stylesheet" href="/src/css/layout.css" />
+  <link rel="stylesheet" href="/src/css/pages/landing.css" />
 </head>
 <body>
+  <div class="app-wrapper">
+    <!-- Top Header -->
+    <header class="top-header">
+      <a href="/" class="header-brand">
+        <div class="brand-icon-wrap">🎓</div>
+        <span>Uni<span class="text-gradient">Circle</span></span>
+      </a>
 
-<header class="container site-header">
-  <div class="rail-brand"><span class="dot">●</span> UniCircle</div>
-  <nav style="display:flex; gap: var(--space-4); align-items:center;">
-    <a href="pages/login.html" class="btn btn-ghost">Log in</a>
-    <a href="pages/signup.html" class="btn btn-primary">Join your community</a>
-  </nav>
-</header>
+      <div class="header-actions">
+        <a href="/pages/login.html" class="btn btn-ghost">Log In</a>
+        <a href="/pages/signup.html" class="btn btn-primary">Join UniCircle</a>
+      </div>
+    </header>
 
-<main>
-  <section class="container hero enter">
-    <div class="path-stub" aria-hidden="true">
-      <span class="current">Your University</span><span class="sep">/</span>
-      <span>School of Medicine</span><span class="sep">/</span>
-      <span>Medicine &amp; Surgery</span><span class="sep">/</span>
-      <span>Year 1</span><span class="sep">/</span>
-      <span>Anatomy</span>
+    <!-- Hero Section -->
+    <main>
+      <section class="landing-hero animate-slide-up">
+        <div class="hero-pill">
+          <span>✨</span>
+          <span>Your Academic Community, Structured Perfectly</span>
+        </div>
+        <h1 class="hero-title">
+          Your university. Your people.<br />
+          <span class="text-gradient">Your conversations.</span>
+        </h1>
+        <p class="hero-desc">
+          Connect directly with students who are actually studying the same courses, in the same program, at your university. Ask questions, form study groups, and share knowledge without noise.
+        </p>
+        <div class="hero-cta-group">
+          <a href="/pages/signup.html" class="btn btn-primary btn-lg btn-interactive">
+            <span>🚀</span>
+            <span>Get Started — It's Free</span>
+          </a>
+          <a href="/pages/login.html" class="btn btn-secondary btn-lg btn-interactive">
+            <span>Sign In</span>
+          </a>
+        </div>
+      </section>
+
+      <!-- Academic Hierarchy Section -->
+      <section class="landing-section">
+        <div class="section-header">
+          <h2 class="section-title">Built Around Your Academic Identity</h2>
+          <p style="color: var(--text-secondary); max-width: 600px; margin: 0 auto;">
+            Unlike generic forums, UniCircle organizes discussions layer-by-layer so you can engage at the right level of relevance.
+          </p>
+        </div>
+        
+        <div class="hierarchy-grid">
+          <div class="hierarchy-step">
+            <div class="step-icon">
+              <!-- Institution / Building -->
+               <svg width="300" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="3" y1="22" x2="21" y2="22"></line>
+                <line x1="6" y1="18" x2="6" y2="11"></line>
+                <line x1="10" y1="18" x2="10" y2="11"></line>
+                <line x1="14" y1="18" x2="14" y2="11"></line>
+                <line x1="18" y1="18" x2="18" y2="11"></line>
+                <polygon points="12 2 20 7 4 7"></polygon>
+              </svg>
+            </div>
+            <h4 style="margin-bottom: 0.5rem;">Institution</h4>
+            <p style="font-size: 0.8125rem;">Campus-wide announcements, clubs, and university life.</p>
+          </div>
+          
+          <div class="hierarchy-step">
+            <div class="step-icon">
+              <!-- Faculty / Microscope -->
+               <svg width="300" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6 18h8"></path>
+                <path d="M3 22h18"></path>
+                <path d="M14 22a7 7 0 1 0 0-14h-1"></path>
+                <path d="M9 14h2"></path>
+                <path d="M9 12a2 2 0 0 1-2-2V6h6v4a2 2 0 0 1-2 2Z"></path>
+                <path d="M12 6V3a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v3"></path>
+              </svg>
+            </div>
+            <h4 style="margin-bottom: 0.5rem;">Faculty / School</h4>
+            <p style="font-size: 0.8125rem;">School of Medicine, Engineering, Business, etc.</p>
+          </div>
+          
+          <div class="hierarchy-step">
+            <div class="step-icon">
+              <!-- Program / Library Books -->
+               <svg width="300" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m16 6 4 14"></path>
+                <path d="M12 6v14"></path>
+                <path d="M8 8v12"></path>
+                <path d="M4 4v16"></path>
+              </svg>
+            </div>
+            <h4 style="margin-bottom: 0.5rem;">Program</h4>
+            <p style="font-size: 0.8125rem;">Discussions for your specific major and degree.</p>
+          </div>
+  
+          <div class="hierarchy-step">
+            <div class="step-icon">
+              <!-- Academic Year / Calendar -->
+               <svg width="300" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+            </div>
+            <h4 style="margin-bottom: 0.5rem;">Academic Year</h4>
+            <p style="font-size: 0.8125rem;">Connect with classmates in your exact year.</p>
+          </div>
+  
+        <div class="hierarchy-step">
+          <div class="step-icon">
+            <!-- Courses / Open Book -->
+            <svg width="300" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+              <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+            </svg>
+          </div>
+          <h4 style="margin-bottom: 0.5rem;">Courses</h4>
+          <p style="font-size: 0.8125rem;">Assignment help, exam prep, and specific lectures.</p>
+        </div>
+      </div>
+      </section>
+
+      <!-- Key Features Section -->
+      <section class="landing-section">
+        <div class="section-header">
+          <h2 class="section-title">Everything Real Students Need</h2>
+          <p style="color: var(--text-secondary);">Clean, fast, and engineered for actual academic collaboration.</p>
+        </div>
+
+        <div class="feature-grid">
+  <div class="feature-card">
+    <div style="font-size: 2rem; margin-bottom: 1rem; line-height: 1;">
+      <!-- Course-Specific Discussions / Message Square -->
+      <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+      </svg>
     </div>
-    <h1>Your university.<br>Your people.<br>Your conversations.</h1>
-    <p class="hero-sub">UniCircle organizes discussion the way your academic life is actually structured — by institution, faculty, program, year, and course — so you find the people studying exactly what you're studying.</p>
-    <div class="hero-actions">
-      <a href="pages/signup.html" class="btn btn-primary">Create your account</a>
-      <a href="pages/login.html" class="btn btn-secondary">Log in</a>
+    <h3 style="font-size: 1.2rem; margin-bottom: 0.5rem;">Course-Specific Discussions</h3>
+    <p style="font-size: 0.9rem;">
+      Filter discussions by category: Questions, Assignments, Exams, Study Help, Resources, and Campus Life.
+    </p>
+  </div>
+
+  <div class="feature-card">
+    <div style="font-size: 2rem; margin-bottom: 1rem; line-height: 1;">
+      <!-- Anonymous Posting / Shield-User -->
+      <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path>
+      </svg>
     </div>
-  </section>
+    <h3 style="font-size: 1.2rem; margin-bottom: 0.5rem;">Anonymous Posting</h3>
+    <p style="font-size: 0.9rem;">
+      Ask sensitive academic questions without hesitation while keeping moderation accountability secure.
+    </p>
+  </div>
 
-  <section class="container how-it-works enter-stagger" style="--delay:80ms">
-    <h2>How it works</h2>
-    <ol class="steps">
-      <li><span class="meta">01</span><h4>Create your account</h4><p>Sign up with your email — no data shared with anyone until you post it.</p></li>
-      <li><span class="meta">02</span><h4>Choose your academic community</h4><p>Institution, faculty, program, year, courses — set once during onboarding.</p></li>
-      <li><span class="meta">03</span><h4>Find your classmates</h4><p>Every level of your academic identity has its own space, already populated with the right people once they join.</p></li>
-      <li><span class="meta">04</span><h4>Start talking</h4><p>Ask a question, share a resource, or start a study group. No feed to fake — just your community's real conversations.</p></li>
-    </ol>
-  </section>
-
-  <section class="container features enter-stagger" style="--delay:160ms">
-    <h2>Built for how you actually study</h2>
-    <div class="grid grid-3">
-      <div class="card"><h4>Course-level discussions</h4><p>Every course gets its own space for questions, resources, and exam prep — not buried in a giant general feed.</p></div>
-      <div class="card"><h4>Study groups</h4><p>Form a group with classmates in your program and year, and keep the discussion in one place.</p></div>
-      <div class="card"><h4>Post anonymously when it matters</h4><p>Ask the question you're embarrassed to put your name on. Your identity stays private to other students, always.</p></div>
+  <div class="feature-card">
+    <div style="font-size: 2rem; margin-bottom: 1rem; line-height: 1;">
+      <!-- Study Groups / Users -->
+      <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+        <circle cx="9" cy="7" r="4"></circle>
+        <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+      </svg>
     </div>
-  </section>
+    <h3 style="font-size: 1.2rem; margin-bottom: 0.5rem;">Study Groups</h3>
+    <p style="font-size: 0.9rem;">
+      Create, join, and collaborate in focused study groups tailored to your upcoming midterms and finals.
+    </p>
+  </div>
 
-  <section class="container cta-band enter-stagger" style="--delay:220ms">
-    <h2>Join your academic community</h2>
-    <p>It starts empty, on purpose — because it's yours to fill with real conversations.</p>
-    <a href="pages/signup.html" class="btn btn-primary">Get started</a>
-  </section>
-</main>
+  <div class="feature-card">
+    <div style="font-size: 2rem; margin-bottom: 1rem; line-height: 1;">
+      <!-- Multiple Dynamic Themes / Palette -->
+      <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="13.5" cy="6.5" r=".5" fill="currentColor"></circle>
+        <circle cx="17.5" cy="10.5" r=".5" fill="currentColor"></circle>
+        <circle cx="8.5" cy="7.5" r=".5" fill="currentColor"></circle>
+        <circle cx="6.5" cy="12.5" r=".5" fill="currentColor"></circle>
+        <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.92 0 1.7-.72 1.7-1.61 0-.43-.17-.83-.44-1.12-.27-.29-.44-.7-.44-1.14 0-.9 1.1-1.77 2-1.77h1.88C19.78 16.36 22 14.13 22 11.36 22 6.2 17.5 2 12 2z"></path>
+      </svg>
+    </div>
+    <h3 style="font-size: 1.2rem; margin-bottom: 0.5rem;">Multiple Dynamic Themes</h3>
+    <p style="font-size: 0.9rem;">
+      Switch between Dark, Light, Midnight Navy, Emerald Campus, Sunset Amber, and Cyberpunk themes anytime.
+    </p>
+  </div>
 
-<footer class="container" style="padding: var(--space-6) 0; color: var(--slate); font-size: var(--text-sm);">
-  © 2026 UniCircle
-</footer>
+  <div class="feature-card">
+    <div style="font-size: 2rem; margin-bottom: 1rem; line-height: 1;">
+      <!-- Real-Time Notifications / Bell -->
+      <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path>
+        <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path>
+      </svg>
+    </div>
+    <h3 style="font-size: 1.2rem; margin-bottom: 0.5rem;">Real-Time Notifications</h3>
+    <p style="font-size: 0.9rem;">
+      Stay updated instantly when classmates answer your questions or upvote helpful explanations.
+    </p>
+  </div>
 
+  <div class="feature-card">
+    <div style="font-size: 2rem; margin-bottom: 1rem; line-height: 1;">
+      <!-- Clean & Zero Fake Data / Lock -->
+      <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+      </svg>
+    </div>
+    <h3 style="font-size: 1.2rem; margin-bottom: 0.5rem;">Clean & Zero Fake Data</h3>
+    <p style="font-size: 0.9rem;">
+      100% genuine community. Every discussion, course, and study group comes from real students.
+    </p>
+  </div>
+</div>
+      </section>
+
+      <!-- Bottom CTA -->
+      <section class="landing-section" style="text-align: center; margin-bottom: 6rem;">
+        <div class="card" style="padding: 3.5rem 2rem; background: var(--bg-surface-elevated); border-color: var(--border-color-hover);">
+          <h2 style="font-size: 2.25rem; margin-bottom: 1rem;">Ready to set up your student community?</h2>
+          <p style="font-size: 1.1rem; color: var(--text-secondary); max-width: 540px; margin: 0 auto 2rem auto;">
+            Join UniCircle today, establish your academic identity, and start conversations with your classmates.
+          </p>
+          <a href="/pages/signup.html" class="btn btn-primary btn-lg btn-interactive">Create Free Account</a>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer style="border-top: 1px solid var(--border-color); padding: 2rem 1.5rem; text-align: center; color: var(--text-tertiary); font-size: 0.875rem;">
+      <p>© 2026 UniCircle. Built for students worldwide.</p>
+    </footer>
+  </div>
+
+  <script type="module">
+    import { initTheme } from '/src/js/config.js';
+    import { auth } from '/src/js/auth.js';
+    initTheme();
+    if (auth.isAuthenticated()) {
+      window.location.href = '/pages/home.html';
+    }
+  </script>
 </body>
 </html>

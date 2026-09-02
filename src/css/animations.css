@@ -1,56 +1,147 @@
-/* ============================================================================
-   UniCircle — animations.css
-   Tasteful, purposeful motion. Everything here is already guarded by the
-   prefers-reduced-motion block in base.css.
-   ========================================================================= */
+/* UniCircle Rich Animation & Micro-Interactions */
 
-@keyframes fade-up {
-  from { opacity: 0; transform: translateY(8px); }
+/* Fade In */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
+/* Slide Up */
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes spin {
-  to { transform: rotate(360deg); }
+/* Slide Down */
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-18px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes shimmer {
-  0% { background-position: 100% 0; }
-  100% { background-position: -100% 0; }
+/* Scale & Pop In */
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.94); }
+  to { opacity: 1; transform: scale(1); }
 }
 
-@keyframes pop {
+/* Modal Backdrop Blur */
+@keyframes backdropFade {
+  from { opacity: 0; backdrop-filter: blur(0px); }
+  to { opacity: 1; backdrop-filter: blur(8px); }
+}
+
+/* Upvote / Reaction Bounce */
+@keyframes upvotePop {
   0% { transform: scale(1); }
-  40% { transform: scale(1.18); }
-  100% { transform: scale(1); }
+  35% { transform: scale(1.35) rotate(-6deg); }
+  70% { transform: scale(0.92) rotate(3deg); }
+  100% { transform: scale(1) rotate(0deg); }
 }
 
-.enter { animation: fade-up 320ms cubic-bezier(0.16, 1, 0.3, 1) both; }
-.enter-fast { animation: fade-in 180ms ease both; }
-
-/* stagger children entering the viewport — apply --delay inline per item */
-.enter-stagger { animation: fade-up 320ms cubic-bezier(0.16, 1, 0.3, 1) both; animation-delay: var(--delay, 0ms); }
-
-.upvote-pop.active svg { animation: pop 320ms cubic-bezier(0.34, 1.56, 0.64, 1); }
-.save-pop.active svg { animation: pop 320ms cubic-bezier(0.34, 1.56, 0.64, 1); }
-
-.modal-backdrop { animation: fade-in 160ms ease both; }
-.modal-panel { animation: fade-up 220ms cubic-bezier(0.16, 1, 0.3, 1) both; }
-
-@keyframes toast-in {
-  from { opacity: 0; transform: translateY(12px) scale(0.96); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
+/* Pulse / Live Indicator */
+@keyframes pulseGlow {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.15); opacity: 0.6; }
 }
 
-@keyframes dot-pulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(43, 78, 255, 0.35); }
-  50% { box-shadow: 0 0 0 5px rgba(43, 78, 255, 0); }
+/* Floating animation */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
 }
 
-.toast { animation: toast-in 260ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+/* Skeleton Shimmer */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
 
-.notification-row.unread .notif-dot { animation: dot-pulse 1.8s ease-in-out infinite; }
+/* Toast Slide In */
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(100%) scale(0.9); }
+  to { opacity: 1; transform: translateX(0) scale(1); }
+}
+@keyframes toastOut {
+  from { opacity: 1; transform: translateX(0) scale(1); }
+  to { opacity: 0; transform: translateX(100%) scale(0.9); }
+}
+
+/* Ripple effect on click */
+@keyframes ripple {
+  0% { transform: scale(0); opacity: 0.7; }
+  100% { transform: scale(2.5); opacity: 0; }
+}
+
+/* Animation Utility Classes */
+.animate-fade-in {
+  animation: fadeIn var(--transition-normal) forwards;
+}
+
+.animate-slide-up {
+  animation: slideUp 350ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-scale-in {
+  animation: scaleIn 300ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+.animate-pulse {
+  animation: pulseGlow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.upvote-active {
+  animation: upvotePop 400ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  color: var(--brand-primary) !important;
+}
+
+/* Staggered entrance helpers */
+.stagger-container > *:nth-child(1) { animation: slideUp 300ms cubic-bezier(0.16, 1, 0.3, 1) 0.05s both; }
+.stagger-container > *:nth-child(2) { animation: slideUp 300ms cubic-bezier(0.16, 1, 0.3, 1) 0.10s both; }
+.stagger-container > *:nth-child(3) { animation: slideUp 300ms cubic-bezier(0.16, 1, 0.3, 1) 0.15s both; }
+.stagger-container > *:nth-child(4) { animation: slideUp 300ms cubic-bezier(0.16, 1, 0.3, 1) 0.20s both; }
+.stagger-container > *:nth-child(5) { animation: slideUp 300ms cubic-bezier(0.16, 1, 0.3, 1) 0.25s both; }
+.stagger-container > *:nth-child(6) { animation: slideUp 300ms cubic-bezier(0.16, 1, 0.3, 1) 0.30s both; }
+.stagger-container > *:nth-child(7) { animation: slideUp 300ms cubic-bezier(0.16, 1, 0.3, 1) 0.35s both; }
+.stagger-container > *:nth-child(8) { animation: slideUp 300ms cubic-bezier(0.16, 1, 0.3, 1) 0.40s both; }
+
+/* Interactive Hover Card Lift */
+.interactive-card {
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal), border-color var(--transition-normal);
+}
+.interactive-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--border-color-hover);
+}
+
+/* Button Click Press Effect */
+.btn-interactive:active {
+  transform: scale(0.97);
+}
+
+/* Skeleton Loading Shimmer */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--bg-surface-elevated) 25%,
+    var(--bg-surface-hover) 50%,
+    var(--bg-surface-elevated) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s infinite;
+  border-radius: var(--radius-sm);
+}
+
+/* Respect Accessibility Preferences */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,111 +1,90 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
-<script>(function(){try{var t=localStorage.getItem('unicircle_theme')||'system';var r=t==='system'?(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):t;document.documentElement.setAttribute('data-theme',r);}catch(e){}})();</script>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Create your account — UniCircle</title>
-<link rel="stylesheet" href="../src/css/base.css">
-<link rel="stylesheet" href="../src/css/layout.css">
-<link rel="stylesheet" href="../src/css/components.css">
-<link rel="stylesheet" href="../src/css/animations.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign Up — UniCircle</title>
+  <link rel="stylesheet" href="/src/css/base.css" />
+  <link rel="stylesheet" href="/src/css/animations.css" />
+  <link rel="stylesheet" href="/src/css/components.css" />
+  <link rel="stylesheet" href="/src/css/layout.css" />
 </head>
-<body>
-
-<div class="auth-shell">
-  <div class="auth-card enter">
-    <div class="rail-brand" style="margin-bottom: var(--space-5); justify-content:center;">
-      <span class="dot">●</span> UniCircle
+<body style="display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 1.5rem;">
+  <div class="card animate-scale-in" style="width: 100%; max-width: 460px; padding: 2.5rem 2rem;">
+    <div style="text-align: center; margin-bottom: 2rem;">
+      <a href="/" class="header-brand" style="justify-content: center; margin-bottom: 0.75rem;">
+        <div class="brand-icon-wrap">🎓</div>
+        <span>Uni<span class="text-gradient">Circle</span></span>
+      </a>
+      <h2 style="font-size: 1.5rem; margin-bottom: 0.25rem;">Join UniCircle</h2>
+      <p style="font-size: 0.875rem;">Start your genuine academic journey</p>
     </div>
-    <h2 style="text-align:center;">Create your account</h2>
-    <p style="text-align:center; margin-bottom: var(--space-5);">Next you'll set up your academic community.</p>
 
-    <form id="signup-form" novalidate>
-      <div class="field" id="email-field">
-        <label for="email">Email</label>
-        <input id="email" name="email" type="email" autocomplete="email" required>
-        <div class="field-error-message" id="email-error" hidden></div>
+    <form id="signup-form">
+      <div class="input-group">
+        <label class="input-label">Full Name *</label>
+        <input type="text" id="name-input" class="input-field" placeholder="e.g. Gabriel Vance" required autofocus />
       </div>
 
-      <div class="field" id="password-field">
-        <label for="password">Password</label>
-        <input id="password" name="password" type="password" autocomplete="new-password" required>
-        <div class="field-hint">At least 6 characters.</div>
-        <div class="field-error-message" id="password-error" hidden></div>
+      <div class="input-group">
+        <label class="input-label">Username *</label>
+        <input type="text" id="username-input" class="input-field" placeholder="e.g. gabriel_vance" required />
+        <span style="font-size: 0.75rem; color: var(--text-tertiary);">Letters, numbers, underscores or periods</span>
       </div>
 
-      <div class="field" id="confirm-field">
-        <label for="confirm">Confirm password</label>
-        <input id="confirm" name="confirm" type="password" autocomplete="new-password" required>
-        <div class="field-error-message" id="confirm-error" hidden></div>
+      <div class="input-group">
+        <label class="input-label">Email Address *</label>
+        <input type="email" id="email-input" class="input-field" placeholder="e.g. gabriel@university.edu" required />
       </div>
 
-      <button type="submit" class="btn btn-primary btn-block" id="submit-btn">Create account</button>
+      <div class="input-group">
+        <label class="input-label">Password *</label>
+        <input type="password" id="password-input" class="input-field" placeholder="At least 6 characters" required minlength="6" />
+      </div>
+
+      <button type="submit" id="submit-btn" class="btn btn-primary btn-interactive" style="width: 100%; margin-top: 0.5rem; padding: 0.75rem;">
+        Create Account & Continue
+      </button>
     </form>
 
-    <p style="text-align:center; margin-top: var(--space-4); font-size: var(--text-sm);">
-      Already have an account? <a href="login.html">Log in</a>
-    </p>
+    <div style="text-align: center; margin-top: 1.5rem; font-size: 0.875rem; color: var(--text-secondary);">
+      Already have an account? <a href="/pages/login.html" style="color: var(--brand-primary); font-weight: 600;">Sign in</a>
+    </div>
   </div>
-</div>
 
-<script type="module">
-  import { signUp, redirectIfAuthenticated } from "../src/js/auth.js";
-  import { showToast } from "../src/js/components/toast.js";
+  <script type="module">
+    import { initTheme } from '/src/js/config.js';
+    import { api } from '/src/js/api.js';
+    import { auth } from '/src/js/auth.js';
+    import { toast } from '/src/js/components/toast.js';
 
-  redirectIfAuthenticated();
+    initTheme();
+    auth.checkGuest();
 
-  const form = document.getElementById("signup-form");
-  const submitBtn = document.getElementById("submit-btn");
-  const emailField = document.getElementById("email");
-  const passwordField = document.getElementById("password");
-  const confirmField = document.getElementById("confirm");
+    const form = document.getElementById('signup-form');
+    const submitBtn = document.getElementById('submit-btn');
 
-  function setFieldError(fieldId, errorId, message) {
-    const field = document.getElementById(fieldId);
-    const error = document.getElementById(errorId);
-    if (message) {
-      field.classList.add("field-error");
-      error.textContent = message;
-      error.hidden = false;
-    } else {
-      field.classList.remove("field-error");
-      error.hidden = true;
-    }
-  }
+    form.onsubmit = async (e) => {
+      e.preventDefault();
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Creating account...';
 
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    ["email-field", "password-field", "confirm-field"].forEach((id, i) =>
-      setFieldError(id, ["email-error","password-error","confirm-error"][i], "")
-    );
+      const name = document.getElementById('name-input').value.trim();
+      const username = document.getElementById('username-input').value.trim();
+      const email = document.getElementById('email-input').value.trim();
+      const password = document.getElementById('password-input').value;
 
-    const email = emailField.value.trim();
-    const password = passwordField.value;
-    const confirm = confirmField.value;
-
-    let valid = true;
-    if (!email) { setFieldError("email-field", "email-error", "Enter your email."); valid = false; }
-    if (password.length < 6) { setFieldError("password-field", "password-error", "Use at least 6 characters."); valid = false; }
-    if (confirm !== password) { setFieldError("confirm-field", "confirm-error", "Passwords don't match."); valid = false; }
-    if (!valid) return;
-
-    submitBtn.classList.add("btn-loading");
-    submitBtn.disabled = true;
-
-    const result = await signUp(email, password);
-
-    submitBtn.classList.remove("btn-loading");
-    submitBtn.disabled = false;
-
-    if (result.error) {
-      showToast(result.error, { type: "error" });
-      return;
-    }
-
-    showToast("Account created. Let's set up your community.", { type: "success" });
-    setTimeout(() => { window.location.href = "onboarding.html"; }, 600);
-  });
-</script>
+      try {
+        const res = await api.post('/auth/register', { name, username, email, password });
+        auth.setSession(res.token, res.user);
+        toast.success('Account created! Let\'s set up your academic profile.');
+        window.location.href = '/pages/onboarding.html';
+      } catch (err) {
+        toast.error(err.message || 'Registration failed.');
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Create Account & Continue';
+      }
+    };
+  </script>
 </body>
 </html>

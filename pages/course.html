@@ -1,34 +1,45 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
-<script>(function(){try{var t=localStorage.getItem('unicircle_theme')||'system';var r=t==='system'?(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):t;document.documentElement.setAttribute('data-theme',r);}catch(e){}})();</script>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Course — UniCircle</title>
-<link rel="stylesheet" href="../src/css/base.css">
-<link rel="stylesheet" href="../src/css/layout.css">
-<link rel="stylesheet" href="../src/css/components.css">
-<link rel="stylesheet" href="../src/css/animations.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Course Space — UniCircle</title>
+  <link rel="stylesheet" href="/src/css/base.css" />
+  <link rel="stylesheet" href="/src/css/animations.css" />
+  <link rel="stylesheet" href="/src/css/components.css" />
+  <link rel="stylesheet" href="/src/css/layout.css" />
 </head>
 <body>
+  <div class="app-wrapper">
+    <header class="top-header"></header>
 
-<div class="app-shell">
-  <div id="rail-mount"></div>
+    <div class="main-layout">
+      <aside class="left-sidebar"></aside>
 
-  <main class="main route-fade" style="max-width: 760px;">
-    <div id="course-breadcrumb" style="margin-bottom: var(--space-4);"></div>
-    <div id="course-header">
-      <div class="skeleton" style="height:24px; width:40%; margin-bottom:var(--space-3);"></div>
-      <div class="skeleton" style="height:60px;"></div>
+      <main class="content-stream">
+        <div style="margin-bottom: 0.5rem;">
+          <a href="/pages/home.html" class="btn btn-ghost btn-sm" style="padding-left: 0;">← Back to Home</a>
+        </div>
+
+        <div id="course-header-card"></div>
+
+        <!-- Course Tabs -->
+        <div class="tab-nav" style="margin-top: 1.5rem;">
+          <button class="tab-item active" data-tab="discussions">💬 Discussions</button>
+          <button class="tab-item" data-tab="questions">❓ Questions</button>
+          <button class="tab-item" data-tab="resources">📂 Resources</button>
+          <button class="tab-item" data-tab="groups">👥 Study Groups</button>
+          <button class="tab-item" data-tab="members">🎓 Classmates</button>
+        </div>
+
+        <!-- Tab Content Containers -->
+        <div id="course-tab-content" class="stagger-container"></div>
+      </main>
+
+      <aside class="right-rail"></aside>
     </div>
+  </div>
 
-    <div id="tabs" class="category-chips" style="margin: var(--space-5) 0 var(--space-4);"></div>
-    <div id="tab-content"></div>
-  </main>
-</div>
-
-<div id="tabbar-mount"></div>
-
-<script type="module" src="../src/js/course.js"></script>
+  <script type="module" src="/src/js/pages/course.js"></script>
 </body>
 </html>

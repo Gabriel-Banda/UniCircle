@@ -1,39 +1,47 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
-<script>(function(){try{var t=localStorage.getItem('unicircle_theme')||'system';var r=t==='system'?(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):t;document.documentElement.setAttribute('data-theme',r);}catch(e){}})();</script>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Communities — UniCircle</title>
-<link rel="stylesheet" href="../src/css/base.css">
-<link rel="stylesheet" href="../src/css/layout.css">
-<link rel="stylesheet" href="../src/css/components.css">
-<link rel="stylesheet" href="../src/css/animations.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Communities — UniCircle</title>
+  <link rel="stylesheet" href="/src/css/base.css" />
+  <link rel="stylesheet" href="/src/css/animations.css" />
+  <link rel="stylesheet" href="/src/css/components.css" />
+  <link rel="stylesheet" href="/src/css/layout.css" />
 </head>
 <body>
+  <div class="app-wrapper">
+    <header class="top-header"></header>
 
-<div class="app-shell">
-  <div id="rail-mount"></div>
+    <div class="main-layout">
+      <aside class="left-sidebar"></aside>
 
-  <main class="main route-fade">
-    <h1>Communities</h1>
-    <p class="meta" style="margin-bottom: var(--space-5);">Institution, faculty, program, year, and course communities — real ones, built by real students.</p>
+      <main class="content-stream">
+        <div>
+          <h1 style="font-size: 1.75rem;">Academic Communities</h1>
+          <p style="font-size: 0.9375rem;">Find and join spaces organized by university, faculty, degree program, and courses.</p>
+        </div>
 
-    <div class="field" style="max-width: 360px;">
-      <input id="community-search" placeholder="Search communities…">
+        <!-- Level Filter Tabs -->
+        <div class="tab-nav">
+          <button class="tab-item active" data-level="">All Spaces</button>
+          <button class="tab-item" data-level="institution">🏛️ Institutions</button>
+          <button class="tab-item" data-level="faculty">🔬 Faculties</button>
+          <button class="tab-item" data-level="program">📚 Programs</button>
+          <button class="tab-item" data-level="course">📖 Courses</button>
+        </div>
+
+        <div style="display: flex; gap: 0.75rem; align-items: center;">
+          <input type="text" id="comm-search-input" class="input-field" placeholder="Search communities by name..." />
+        </div>
+
+        <div id="communities-grid" class="stagger-container" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem;"></div>
+      </main>
+
+      <aside class="right-rail"></aside>
     </div>
+  </div>
 
-    <div id="level-filter" class="category-chips" style="margin: var(--space-4) 0 var(--space-5);"></div>
-
-    <div id="community-list">
-      <div class="skeleton" style="height:120px; margin-bottom: var(--space-3);"></div>
-      <div class="skeleton" style="height:120px;"></div>
-    </div>
-  </main>
-</div>
-
-<div id="tabbar-mount"></div>
-
-<script type="module" src="../src/js/communities.js"></script>
+  <script type="module" src="/src/js/pages/communities.js"></script>
 </body>
 </html>

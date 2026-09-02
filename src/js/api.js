@@ -1,43 +1,102 @@
-// UniCircle — api.js
-// Single Supabase client instance, shared across every page/module.
+// UniCircle Unified API Client
+import { API_BASE } from './config.js';
+import { toast } from './components/toast.js';
 
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { SUPABASE_URL, SUPABASE_ANON_KEY } from "./config.js";
+class ApiClient {
+  getToken() {
+    return localStorage.getItem('unicircle_token');
+  }
 
-export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-  auth: {
-    persistSession: true,
-    autoRefreshToken: true,
-    detectSessionInUrl: true,
-  },
-});
+  async request(endpoint, options = {}) {
+    const url = endpoint.startsWith('http') ? endpoint : `${API_BASE}${endpoint}`;
+    const token = this.getToken();
 
-/**
- * Translate a raw Supabase/Postgrest error into a message safe to show a user.
- * Never surface raw backend errors (spec section 23).
- */
-export function friendlyError(error) {
-  if (!error) return "Something went wrong. Please try again.";
-  console.error("UniCircle error:", error);
-  const msg = (error.message || "").toLowerCase();
+    const headers = {
+      ...options.headers
+    };
 
-  if (msg.includes("invalid login credentials")) return "That email or password isn't right.";
-  if (msg.includes("user already registered")) return "An account with that email already exists.";
-  if (msg.includes("email not confirmed")) return "Please confirm your email before logging in.";
-  if (msg.includes("password should be at least")) return "Your password needs to be at least 6 characters.";
-  if (msg.includes("failed to fetch") || msg.includes("network")) return "Can't reach the server — check your connection and try again.";
-  if (msg.includes("jwt") || msg.includes("session")) return "Your session has expired. Please log in again.";
-  if (msg.includes("duplicate key") && msg.includes("username")) return "That username is already taken.";
-  if (msg.includes("row-level security") || msg.includes("permission denied")) return "You don't have permission to do that yet — this usually means a database policy needs updating.";
+    if (!(options.body instanceof FormData)) {
+      headers['Content-Type'] = 'application/json';
+    }
 
-  return "Something went wrong. Please try again.";
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+
+    try {
+      const response = await fetch(url, {
+        ...options,
+        headers
+      });
+
+      const data = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        // If unauthorized and on a protected page, handle session expiration
+        if (response.status === 401 && !window.location.pathname.includes('login.html') && !window.location.pathname.includes('signup.html') && !window.location.pathname.endsWith('index.html') && window.location.pathname !== '/') {
+          localStorage.removeItem('unicircle_token');
+          localStorage.removeItem('unicircle_user');
+          window.location.href = '/pages/login.html?expired=1';
+          throw new Error(data.error || 'Session expired. Please log in again.');
+        }
+
+        const errorMessage = data.error || `Request failed with status ${response.status}`;
+        throw new Error(errorMessage);
+      }
+
+      return data;
+    } catch (err) {
+      console.error(`API Error [${endpoint}]:`, err);
+      throw err;
+    }
+  }
+
+  get(endpoint, params = {}) {
+    const query = new URLSearchParams(params).toString();
+    const url = query ? `${endpoint}?${query}` : endpoint;
+    return this.request(url, { method: 'GET' });
+  }
+
+  post(endpoint, body = {}) {
+    return this.request(endpoint, {
+      method: 'POST',
+      body: JSON.stringify(body)
+    });
+  }
+
+  put(endpoint, body = {}) {
+    return this.request(endpoint, {
+      method: 'PUT',
+      body: JSON.stringify(body)
+    });
+  }
+
+  delete(endpoint, body = {}) {
+    return this.request(endpoint, {
+      method: 'DELETE',
+      body: JSON.stringify(body)
+    });
+  }
+
+  // Upload file
+  async upload(file) {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const token = this.getToken();
+    const headers = {};
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+
+    const res = await fetch(`${API_BASE}/upload`, {
+      method: 'POST',
+      headers,
+      body: formData
+    });
+
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Upload failed');
+    return data;
+  }
 }
 
-/** Small helper: fetch the current signed-in user's full profile row, or null. */
-export async function getCurrentProfile() {
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return null;
-  const { data, error } = await supabase.from("profiles").select("*").eq("id", user.id).single();
-  if (error) return null;
-  return data;
-}
+export const api = new ApiClient();

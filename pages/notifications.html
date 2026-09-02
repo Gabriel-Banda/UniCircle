@@ -1,33 +1,42 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
-<script>(function(){try{var t=localStorage.getItem('unicircle_theme')||'system';var r=t==='system'?(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):t;document.documentElement.setAttribute('data-theme',r);}catch(e){}})();</script>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Notifications — UniCircle</title>
-<link rel="stylesheet" href="../src/css/base.css">
-<link rel="stylesheet" href="../src/css/layout.css">
-<link rel="stylesheet" href="../src/css/components.css">
-<link rel="stylesheet" href="../src/css/animations.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Notifications — UniCircle</title>
+  <link rel="stylesheet" href="/src/css/base.css" />
+  <link rel="stylesheet" href="/src/css/animations.css" />
+  <link rel="stylesheet" href="/src/css/components.css" />
+  <link rel="stylesheet" href="/src/css/layout.css" />
 </head>
 <body>
+  <div class="app-wrapper">
+    <header class="top-header"></header>
 
-<div class="app-shell">
-  <div id="rail-mount"></div>
+    <div class="main-layout">
+      <aside class="left-sidebar"></aside>
 
-  <main class="main route-fade" style="max-width: 640px;">
-    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: var(--space-5);">
-      <h1 style="margin:0;">Notifications</h1>
-      <button class="btn btn-ghost" id="mark-all-read">Mark all read</button>
+      <main class="content-stream">
+        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+          <div>
+            <h1 style="font-size: 1.75rem;">Notifications</h1>
+            <p style="font-size: 0.9375rem;">Stay updated with replies, upvotes, and study group invitations.</p>
+          </div>
+          <button id="mark-all-read-btn" class="btn btn-secondary btn-sm">Mark All as Read</button>
+        </div>
+
+        <div class="tab-nav">
+          <button class="tab-item active" data-filter="all">All Alerts</button>
+          <button class="tab-item" data-filter="unread">Unread Only</button>
+        </div>
+
+        <div id="notifications-list" class="stagger-container" style="display: flex; flex-direction: column; gap: 0.75rem;"></div>
+      </main>
+
+      <aside class="right-rail"></aside>
     </div>
-    <div id="notification-list">
-      <div class="skeleton" style="height:60px; margin-bottom: var(--space-2);"></div>
-    </div>
-  </main>
-</div>
+  </div>
 
-<div id="tabbar-mount"></div>
-
-<script type="module" src="../src/js/notifications.js"></script>
+  <script type="module" src="/src/js/pages/notifications.js"></script>
 </body>
 </html>

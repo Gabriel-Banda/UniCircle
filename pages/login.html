@@ -1,116 +1,88 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
-<script>(function(){try{var t=localStorage.getItem('unicircle_theme')||'system';var r=t==='system'?(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):t;document.documentElement.setAttribute('data-theme',r);}catch(e){}})();</script>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Log in — UniCircle</title>
-<link rel="stylesheet" href="../src/css/base.css">
-<link rel="stylesheet" href="../src/css/layout.css">
-<link rel="stylesheet" href="../src/css/components.css">
-<link rel="stylesheet" href="../src/css/animations.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Log In — UniCircle</title>
+  <link rel="stylesheet" href="/src/css/base.css" />
+  <link rel="stylesheet" href="/src/css/animations.css" />
+  <link rel="stylesheet" href="/src/css/components.css" />
+  <link rel="stylesheet" href="/src/css/layout.css" />
 </head>
-<body>
-
-<div class="auth-shell">
-  <div class="auth-card enter">
-    <div class="rail-brand" style="margin-bottom: var(--space-5); justify-content:center;">
-      <span class="dot">●</span> UniCircle
+<body style="display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 1.5rem;">
+  <div class="card animate-scale-in" style="width: 100%; max-width: 440px; padding: 2.5rem 2rem;">
+    <div style="text-align: center; margin-bottom: 2rem;">
+      <a href="/" class="header-brand" style="justify-content: center; margin-bottom: 0.75rem;">
+        <div class="brand-icon-wrap">🎓</div>
+        <span>Uni<span class="text-gradient">Circle</span></span>
+      </a>
+      <h2 style="font-size: 1.5rem; margin-bottom: 0.25rem;">Welcome back</h2>
+      <p style="font-size: 0.875rem;">Sign in to your academic community</p>
     </div>
-    <h2 style="text-align:center;">Welcome back</h2>
-    <p style="text-align:center; margin-bottom: var(--space-5);">Log in to your academic community.</p>
 
-    <form id="login-form" novalidate>
-      <div class="field" id="email-field">
-        <label for="email">Email</label>
-        <input id="email" name="email" type="email" autocomplete="email" required>
-        <div class="field-error-message" id="email-error" hidden></div>
+    <form id="login-form">
+      <div class="input-group">
+        <label class="input-label">Email or Username</label>
+        <input type="text" id="login-input" class="input-field" placeholder="e.g. student@uni.edu or alex_smith" required autofocus />
       </div>
 
-      <div class="field" id="password-field">
-        <label for="password">Password</label>
-        <input id="password" name="password" type="password" autocomplete="current-password" required>
-        <div class="field-error-message" id="password-error" hidden></div>
+      <div class="input-group">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.375rem;">
+          <label class="input-label" style="margin-bottom: 0;">Password</label>
+          <a href="/pages/reset-password.html" style="font-size: 0.75rem; color: var(--brand-primary); font-weight: 600;">Forgot password?</a>
+        </div>
+        <input type="password" id="password-input" class="input-field" placeholder="••••••••" required />
       </div>
 
-      <button type="submit" class="btn btn-primary btn-block" id="submit-btn">Log in</button>
+      <button type="submit" id="submit-btn" class="btn btn-primary btn-interactive" style="width: 100%; margin-top: 0.5rem; padding: 0.75rem;">
+        Log In
+      </button>
     </form>
 
-    <p style="text-align:center; margin-top: var(--space-4); font-size: var(--text-sm);">
-      <a href="#" id="forgot-link">Forgot your password?</a>
-    </p>
-    <p style="text-align:center; font-size: var(--text-sm);">
-      New here? <a href="signup.html">Create an account</a>
-    </p>
+    <div style="text-align: center; margin-top: 1.5rem; font-size: 0.875rem; color: var(--text-secondary);">
+      Don't have an account? <a href="/pages/signup.html" style="color: var(--brand-primary); font-weight: 600;">Create one</a>
+    </div>
   </div>
-</div>
 
-<script type="module">
-  import { logIn, requestPasswordReset, redirectIfAuthenticated } from "../src/js/auth.js";
-  import { showToast } from "../src/js/components/toast.js";
+  <script type="module">
+    import { initTheme } from '/src/js/config.js';
+    import { api } from '/src/js/api.js';
+    import { auth } from '/src/js/auth.js';
+    import { toast } from '/src/js/components/toast.js';
 
-  redirectIfAuthenticated();
+    initTheme();
+    auth.checkGuest();
 
-  const form = document.getElementById("login-form");
-  const submitBtn = document.getElementById("submit-btn");
-  const emailField = document.getElementById("email");
-  const passwordField = document.getElementById("password");
+    const form = document.getElementById('login-form');
+    const submitBtn = document.getElementById('submit-btn');
 
-  function setFieldError(fieldId, errorId, message) {
-    const field = document.getElementById(fieldId);
-    const error = document.getElementById(errorId);
-    if (message) {
-      field.classList.add("field-error");
-      error.textContent = message;
-      error.hidden = false;
-    } else {
-      field.classList.remove("field-error");
-      error.hidden = true;
-    }
-  }
+    form.onsubmit = async (e) => {
+      e.preventDefault();
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Signing in...';
 
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    setFieldError("email-field", "email-error", "");
-    setFieldError("password-field", "password-error", "");
+      const login = document.getElementById('login-input').value.trim();
+      const password = document.getElementById('password-input').value;
 
-    const email = emailField.value.trim();
-    const password = passwordField.value;
+      try {
+        const res = await api.post('/auth/login', { login, password });
+        auth.setSession(res.token, res.user);
+        toast.success('Welcome back!');
 
-    let valid = true;
-    if (!email) { setFieldError("email-field", "email-error", "Enter your email."); valid = false; }
-    if (!password) { setFieldError("password-field", "password-error", "Enter your password."); valid = false; }
-    if (!valid) return;
-
-    submitBtn.classList.add("btn-loading");
-    submitBtn.disabled = true;
-
-    const result = await logIn(email, password);
-
-    submitBtn.classList.remove("btn-loading");
-    submitBtn.disabled = false;
-
-    if (result.error) {
-      showToast(result.error, { type: "error" });
-      return;
-    }
-    window.location.href = "onboarding.html"; // auth.js redirects further if already onboarded
-  });
-
-  document.getElementById("forgot-link").addEventListener("click", async (e) => {
-    e.preventDefault();
-    const email = emailField.value.trim();
-    if (!email) {
-      setFieldError("email-field", "email-error", "Enter your email above first, then click this link.");
-      return;
-    }
-    const result = await requestPasswordReset(email);
-    if (result.error) {
-      showToast(result.error, { type: "error" });
-    } else {
-      showToast("Check your email for a password reset link.", { type: "success" });
-    }
-  });
-</script>
+        // Check if onboarding completed
+        if (!res.user.institution_id) {
+          window.location.href = '/pages/onboarding.html';
+        } else {
+          const params = new URLSearchParams(window.location.search);
+          const redirect = params.get('redirect') || '/pages/home.html';
+          window.location.href = redirect;
+        }
+      } catch (err) {
+        toast.error(err.message || 'Login failed.');
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Log In';
+      }
+    };
+  </script>
 </body>
 </html>

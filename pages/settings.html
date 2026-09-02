@@ -1,57 +1,142 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
-<script>(function(){try{var t=localStorage.getItem('unicircle_theme')||'system';var r=t==='system'?(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):t;document.documentElement.setAttribute('data-theme',r);}catch(e){}})();</script>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Settings — UniCircle</title>
-<link rel="stylesheet" href="../src/css/base.css">
-<link rel="stylesheet" href="../src/css/layout.css">
-<link rel="stylesheet" href="../src/css/components.css">
-<link rel="stylesheet" href="../src/css/animations.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Settings — UniCircle</title>
+  <link rel="stylesheet" href="/src/css/base.css" />
+  <link rel="stylesheet" href="/src/css/animations.css" />
+  <link rel="stylesheet" href="/src/css/components.css" />
+  <link rel="stylesheet" href="/src/css/layout.css" />
 </head>
 <body>
+  <div class="app-wrapper">
+    <header class="top-header"></header>
 
-<div class="app-shell">
-  <div id="rail-mount"></div>
+    <div class="main-layout">
+      <aside class="left-sidebar"></aside>
 
-  <main class="main route-fade" style="max-width: 560px;">
-    <h1 style="margin-bottom: var(--space-6);">Settings</h1>
+      <main class="content-stream">
+        <div>
+          <h1 style="font-size: 1.75rem;">Account & App Settings</h1>
+          <p style="font-size: 0.9375rem;">Manage your profile, academic identity, appearance themes, and security.</p>
+        </div>
 
-    <section class="dash-section card">
-      <h3>Account</h3>
-      <div id="account-section"></div>
-    </section>
+        <!-- Settings Nav Tabs -->
+        <div class="tab-nav">
+          <button class="tab-item active" data-section="profile-sec">👤 Profile</button>
+          <button class="tab-item" data-section="academic-sec">🎓 Academic Identity</button>
+          <button class="tab-item" data-section="appearance-sec">🎨 Appearance & Themes</button>
+          <button class="tab-item" data-section="security-sec">🔒 Security & Password</button>
+          <button class="tab-item" data-section="danger-sec" style="color: var(--accent-rose);">⚠️ Danger Zone</button>
+        </div>
 
-    <section class="dash-section card">
-      <h3>Privacy</h3>
-      <div id="privacy-section"></div>
-    </section>
+        <!-- 1. Profile Section -->
+        <section id="profile-sec" class="settings-section card animate-fade-in">
+          <h3 style="margin-bottom: 1.25rem;">Profile Information</h3>
+          <form id="profile-form">
+            <div class="input-group">
+              <label class="input-label">Full Name</label>
+              <input type="text" id="set-name" class="input-field" required />
+            </div>
 
-    <section class="dash-section card">
-      <h3>Notifications</h3>
-      <div id="notifications-section"></div>
-    </section>
+            <div class="input-group">
+              <label class="input-label">Username</label>
+              <input type="text" id="set-username" class="input-field" required />
+            </div>
 
-    <section class="dash-section card">
-      <h3>Appearance</h3>
-      <div id="appearance-section"></div>
-    </section>
+            <div class="input-group">
+              <label class="input-label">Bio</label>
+              <textarea id="set-bio" class="textarea-field" placeholder="Tell classmates about your academic interests..."></textarea>
+            </div>
 
-    <section class="dash-section card">
-      <h3>Security</h3>
-      <div id="security-section"></div>
-    </section>
+            <div class="input-group">
+              <label class="input-label">Avatar Color Theme</label>
+              <div id="avatar-color-palette" style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.25rem;"></div>
+            </div>
 
-    <section class="dash-section card" style="border-color: var(--brick);">
-      <h3 style="color: var(--brick);">Danger Zone</h3>
-      <div id="danger-section"></div>
-    </section>
-  </main>
-</div>
+            <button type="submit" id="save-profile-btn" class="btn btn-primary btn-interactive" style="margin-top: 1rem;">Save Profile Changes</button>
+          </form>
+        </section>
 
-<div id="tabbar-mount"></div>
+        <!-- 2. Academic Identity Section -->
+        <section id="academic-sec" class="settings-section card animate-fade-in" style="display: none;">
+          <h3 style="margin-bottom: 0.5rem;">Academic Identity</h3>
+          <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 1.5rem;">
+            Your academic identity connects you with the right faculty, degree program, and course discussions.
+          </p>
 
-<script type="module" src="../src/js/settings.js"></script>
+          <form id="academic-form">
+            <div class="input-group">
+              <label class="input-label">Academic Year</label>
+              <select id="set-year" class="select-field">
+                <option value="Year 1">Year 1 (Freshman)</option>
+                <option value="Year 2">Year 2 (Sophomore)</option>
+                <option value="Year 3">Year 3 (Junior)</option>
+                <option value="Year 4">Year 4 (Senior)</option>
+                <option value="Year 5+">Year 5+ / Final Year</option>
+                <option value="Postgraduate">Master's / Postgraduate / PhD</option>
+              </select>
+            </div>
+
+            <div style="margin-top: 1rem;">
+              <a href="/pages/onboarding.html" class="btn btn-secondary btn-sm">Reconfigure Institution & Degree Wizard →</a>
+            </div>
+
+            <button type="submit" id="save-academic-btn" class="btn btn-primary btn-interactive" style="margin-top: 1.5rem;">Update Academic Info</button>
+          </form>
+        </section>
+
+        <!-- 3. Appearance & Themes Section -->
+        <section id="appearance-sec" class="settings-section card animate-fade-in" style="display: none;">
+          <h3 style="margin-bottom: 0.5rem;">Theme & Visual Appearance</h3>
+          <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 1.5rem;">
+            Select your preferred color theme. Changes apply immediately across all pages.
+          </p>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;" id="theme-selector-grid"></div>
+        </section>
+
+        <!-- 4. Security & Password Section -->
+        <section id="security-sec" class="settings-section card animate-fade-in" style="display: none;">
+          <h3 style="margin-bottom: 1.25rem;">Change Password</h3>
+          <form id="password-form">
+            <div class="input-group">
+              <label class="input-label">Current Password</label>
+              <input type="password" id="current-pass" class="input-field" required />
+            </div>
+
+            <div class="input-group">
+              <label class="input-label">New Password (min 6 chars)</label>
+              <input type="password" id="new-pass" class="input-field" minlength="6" required />
+            </div>
+
+            <button type="submit" id="save-pass-btn" class="btn btn-primary btn-interactive" style="margin-top: 1rem;">Update Password</button>
+          </form>
+        </section>
+
+        <!-- 5. Danger Zone -->
+        <section id="danger-sec" class="settings-section card animate-fade-in" style="display: none; border-color: rgba(239, 68, 68, 0.4);">
+          <h3 style="color: var(--accent-rose); margin-bottom: 0.5rem;">Danger Zone</h3>
+          <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 1.5rem;">
+            Permanently delete your account and all associated discussion records. This action cannot be reversed.
+          </p>
+
+          <form id="delete-account-form">
+            <div class="input-group">
+              <label class="input-label">Confirm Password to Delete Account</label>
+              <input type="password" id="delete-pass" class="input-field" placeholder="Enter password to confirm" required />
+            </div>
+
+            <button type="submit" id="delete-acc-btn" class="btn btn-danger btn-interactive" style="margin-top: 0.5rem;">Permanently Delete Account</button>
+          </form>
+        </section>
+      </main>
+
+      <aside class="right-rail"></aside>
+    </div>
+  </div>
+
+  <script type="module" src="/src/js/pages/settings.js"></script>
 </body>
 </html>

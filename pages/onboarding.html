@@ -1,24 +1,208 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
-<script>(function(){try{var t=localStorage.getItem('unicircle_theme')||'system';var r=t==='system'?(window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):t;document.documentElement.setAttribute('data-theme',r);}catch(e){}})();</script>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Set up your community — UniCircle</title>
-<link rel="stylesheet" href="../src/css/base.css">
-<link rel="stylesheet" href="../src/css/layout.css">
-<link rel="stylesheet" href="../src/css/components.css">
-<link rel="stylesheet" href="../src/css/animations.css">
-<link rel="stylesheet" href="../src/css/pages/onboarding.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Setup Your Academic Identity — UniCircle</title>
+  <link rel="stylesheet" href="/src/css/base.css" />
+  <link rel="stylesheet" href="/src/css/animations.css" />
+  <link rel="stylesheet" href="/src/css/components.css" />
+  <link rel="stylesheet" href="/src/css/layout.css" />
+  <link rel="stylesheet" href="/src/css/pages/onboarding.css" />
 </head>
 <body>
+  <div class="app-wrapper">
+    <!-- Top Minimal Header -->
+    <header class="top-header" style="justify-content: center;">
+      <div class="header-brand">
+        <div class="brand-icon-wrap">🎓</div>
+        <span>Uni<span class="text-gradient">Circle</span></span>
+      </div>
+    </header>
 
-<div class="auth-shell">
-  <div class="auth-card onboard-card enter" id="onboarding-app" style="max-width: 480px;">
-    <!-- rendered by js/onboarding.js -->
+    <main class="onboarding-container">
+      <!-- Step Indicator Bar -->
+      <div class="step-indicator-bar">
+        <div class="step-progress-line">
+          <div id="progress-fill" class="step-progress-fill"></div>
+        </div>
+        <div class="step-node active" data-step="1">1</div>
+        <div class="step-node" data-step="2">2</div>
+        <div class="step-node" data-step="3">3</div>
+        <div class="step-node" data-step="4">4</div>
+        <div class="step-node" data-step="5">5</div>
+        <div class="step-node" data-step="6">6</div>
+      </div>
+
+      <!-- STEP 1: Basic Identity & Bio -->
+      <div id="step-1" class="onboarding-step active card">
+        <h2 style="font-size: 1.5rem; margin-bottom: 0.5rem;">Welcome to UniCircle 👋</h2>
+        <p style="margin-bottom: 1.5rem;">Let's verify your student profile before connecting to your university.</p>
+
+        <div class="input-group">
+          <label class="input-label">Display Name *</label>
+          <input type="text" id="ob-name" class="input-field" required />
+        </div>
+
+        <div class="input-group">
+          <label class="input-label">Short Student Bio (Optional)</label>
+          <textarea id="ob-bio" class="textarea-field" placeholder="Tell classmates what you're interested in or what you study..."></textarea>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; margin-top: 1.5rem;">
+          <button id="step-1-next" class="btn btn-primary btn-interactive">Continue to Institution →</button>
+        </div>
+      </div>
+
+      <!-- STEP 2: Institution -->
+      <div id="step-2" class="onboarding-step card">
+        <h2 style="font-size: 1.5rem; margin-bottom: 0.5rem;">Select Your Institution 🏛️</h2>
+        <p style="margin-bottom: 1rem;">Search for your university or college to join its official campus network.</p>
+
+        <div class="input-group">
+          <input type="text" id="inst-search-input" class="input-field" placeholder="Search university name (e.g. Oxford, Stanford, MIT)..." />
+        </div>
+
+        <div id="institutions-list" class="selection-grid">
+          <!-- Dynamically populated -->
+        </div>
+
+        <!-- Add Custom Institution Option -->
+        <div class="add-custom-box">
+          <div style="font-size: 0.875rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.5rem;">Don't see your university? Add it:</div>
+          <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 0.75rem; margin-bottom: 0.5rem;">
+            <input type="text" id="new-inst-name" class="input-field" placeholder="Full University Name" />
+            <input type="text" id="new-inst-code" class="input-field" placeholder="Code (e.g. MIT)" />
+          </div>
+          <button id="add-inst-btn" class="btn btn-secondary btn-sm">+ Add My University</button>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; margin-top: 1.5rem;">
+          <button id="step-2-back" class="btn btn-secondary">← Back</button>
+          <button id="step-2-next" class="btn btn-primary btn-interactive" disabled>Continue to Faculty →</button>
+        </div>
+      </div>
+
+      <!-- STEP 3: Faculty / School -->
+      <div id="step-3" class="onboarding-step card">
+        <h2 style="font-size: 1.5rem; margin-bottom: 0.5rem;">Select Your Faculty or School 🔬</h2>
+        <p style="margin-bottom: 1rem;" id="faculty-subtitle">Choose the faculty you are enrolled in.</p>
+
+        <div id="faculties-list" class="selection-grid">
+          <!-- Dynamically populated -->
+        </div>
+
+        <div class="add-custom-box">
+          <div style="font-size: 0.875rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.5rem;">Add your faculty or department:</div>
+          <div style="display: flex; gap: 0.75rem; margin-bottom: 0.5rem;">
+            <input type="text" id="new-fac-name" class="input-field" placeholder="e.g. School of Medicine, Faculty of Engineering" />
+          </div>
+          <button id="add-fac-btn" class="btn btn-secondary btn-sm">+ Add Faculty</button>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; margin-top: 1.5rem;">
+          <button id="step-3-back" class="btn btn-secondary">← Back</button>
+          <button id="step-3-next" class="btn btn-primary btn-interactive" disabled>Continue to Program →</button>
+        </div>
+      </div>
+
+      <!-- STEP 4: Program / Degree -->
+      <div id="step-4" class="onboarding-step card">
+        <h2 style="font-size: 1.5rem; margin-bottom: 0.5rem;">Select Your Degree Program 📚</h2>
+        <p style="margin-bottom: 1rem;">Choose your exact field of study or major.</p>
+
+        <div id="programs-list" class="selection-grid">
+          <!-- Dynamically populated -->
+        </div>
+
+        <div class="add-custom-box">
+          <div style="font-size: 0.875rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.5rem;">Add your degree program:</div>
+          <div style="display: flex; gap: 0.75rem; margin-bottom: 0.5rem;">
+            <input type="text" id="new-prog-name" class="input-field" placeholder="e.g. Computer Science, Medicine & Surgery" />
+          </div>
+          <button id="add-prog-btn" class="btn btn-secondary btn-sm">+ Add Program</button>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; margin-top: 1.5rem;">
+          <button id="step-4-back" class="btn btn-secondary">← Back</button>
+          <button id="step-4-next" class="btn btn-primary btn-interactive" disabled>Continue to Academic Year →</button>
+        </div>
+      </div>
+
+      <!-- STEP 5: Academic Year -->
+      <div id="step-5" class="onboarding-step card">
+        <h2 style="font-size: 1.5rem; margin-bottom: 0.5rem;">What Year Are You In? 📅</h2>
+        <p style="margin-bottom: 1.5rem;">Connect with students taking the same semester coursework.</p>
+
+        <div class="selection-grid" id="years-list" style="max-height: none;">
+          <div class="selection-item" data-year="Year 1">
+            <span style="font-weight: 600;">Year 1 (Freshman)</span>
+            <span style="font-size: 1.1rem;">🌱</span>
+          </div>
+          <div class="selection-item" data-year="Year 2">
+            <span style="font-weight: 600;">Year 2 (Sophomore)</span>
+            <span style="font-size: 1.1rem;">🌿</span>
+          </div>
+          <div class="selection-item" data-year="Year 3">
+            <span style="font-weight: 600;">Year 3 (Junior)</span>
+            <span style="font-size: 1.1rem;">🌳</span>
+          </div>
+          <div class="selection-item" data-year="Year 4">
+            <span style="font-weight: 600;">Year 4 (Senior)</span>
+            <span style="font-size: 1.1rem;">🎓</span>
+          </div>
+          <div class="selection-item" data-year="Year 5+">
+            <span style="font-weight: 600;">Year 5+ / Final Year</span>
+            <span style="font-size: 1.1rem;">🏛️</span>
+          </div>
+          <div class="selection-item" data-year="Postgraduate">
+            <span style="font-weight: 600;">Master's / Postgraduate / PhD</span>
+            <span style="font-size: 1.1rem;">🔬</span>
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; margin-top: 1.5rem;">
+          <button id="step-5-back" class="btn btn-secondary">← Back</button>
+          <button id="step-5-next" class="btn btn-primary btn-interactive" disabled>Continue to Courses →</button>
+        </div>
+      </div>
+
+      <!-- STEP 6: Courses (Select or Add) -->
+      <div id="step-6" class="onboarding-step card">
+        <h2 style="font-size: 1.5rem; margin-bottom: 0.5rem;">Select Your Courses 📖</h2>
+        <p style="margin-bottom: 1rem;">Select or add the courses you are studying this term.</p>
+
+        <div id="courses-list" class="selection-grid">
+          <!-- Dynamically populated -->
+        </div>
+
+        <div class="add-custom-box">
+          <div style="font-size: 0.875rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.5rem;">Add a course you're taking:</div>
+          <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 0.75rem; margin-bottom: 0.5rem;">
+            <input type="text" id="new-course-code" class="input-field" placeholder="Code (e.g. CS101)" />
+            <input type="text" id="new-course-name" class="input-field" placeholder="Course Name (e.g. Intro to CS)" />
+          </div>
+          <button id="add-course-btn" class="btn btn-secondary btn-sm">+ Add Course</button>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; margin-top: 1.5rem;">
+          <button id="step-6-back" class="btn btn-secondary">← Back</button>
+          <button id="step-6-finish" class="btn btn-primary btn-lg btn-interactive">Complete Setup & Launch 🚀</button>
+        </div>
+      </div>
+
+      <!-- STEP 7: COMPLETE SUCCESS MODAL / SCREEN -->
+      <div id="step-complete" class="onboarding-step card" style="text-align: center; padding: 3rem 2rem;">
+        <div style="font-size: 3.5rem; margin-bottom: 1rem; animation: upvotePop 600ms cubic-bezier(0.34, 1.56, 0.64, 1);">🎉</div>
+        <h2 style="font-size: 2rem; margin-bottom: 0.5rem;">You're All Set!</h2>
+        <p style="font-size: 1.1rem; color: var(--text-secondary); max-width: 460px; margin: 0 auto 2rem auto;">
+          Your academic identity is active. Welcome to your genuine student discussion space.
+        </p>
+        <button id="enter-home-btn" class="btn btn-primary btn-lg btn-interactive">Go to My Community Home →</button>
+      </div>
+    </main>
   </div>
-</div>
 
-<script type="module" src="../src/js/onboarding.js"></script>
+  <script type="module" src="/src/js/pages/onboarding.js"></script>
 </body>
 </html>

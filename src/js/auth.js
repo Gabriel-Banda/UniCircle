@@ -1,70 +1,90 @@
-// UniCircle — auth.js
-// signup/login/logout/password-reset against Supabase Auth,
-// plus session guards used by every protected page.
+// UniCircle Auth State & Route Protection
+import { api } from './api.js';
 
-import { supabase, friendlyError, getCurrentProfile } from "./api.js";
-
-/**
- * Create an account. Does NOT create the profile row here — that happens
- * at the end of onboarding (Phase 2), once we know username/name.
- */
-export async function signUp(email, password) {
-  const { data, error } = await supabase.auth.signUp({ email, password });
-  if (error) return { error: friendlyError(error) };
-  return { user: data.user };
-}
-
-export async function logIn(email, password) {
-  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-  if (error) return { error: friendlyError(error) };
-  return { user: data.user };
-}
-
-export async function logOut() {
-  const { error } = await supabase.auth.signOut();
-  if (error) return { error: friendlyError(error) };
-  window.location.href = "../index.html";
-}
-
-export async function requestPasswordReset(email) {
-  const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: window.location.origin + "/reset-password.html",
-  });
-  if (error) return { error: friendlyError(error) };
-  return { ok: true };
-}
-
-export async function updatePassword(newPassword) {
-  const { error } = await supabase.auth.updateUser({ password: newPassword });
-  if (error) return { error: friendlyError(error) };
-  return { ok: true };
-}
-
-/**
- * Route guard for protected pages: call at the top of every authenticated
- * page's script. Redirects to login if there's no session, and to
- * onboarding if the signed-in user hasn't finished setting up their
- * academic identity yet.
- */
-export async function requireAuth({ requireOnboarded = true } = {}) {
-  const { data: { session } } = await supabase.auth.getSession();
-  if (!session) {
-    window.location.href = "login.html";
-    return null;
+class AuthManager {
+  constructor() {
+    this.user = null;
+    this.loadCachedUser();
   }
-  const profile = await getCurrentProfile();
-  if (requireOnboarded && (!profile || !profile.onboarding_complete)) {
-    window.location.href = "onboarding.html";
-    return null;
+
+  loadCachedUser() {
+    try {
+      const cached = localStorage.getItem('unicircle_user');
+      if (cached) {
+        this.user = JSON.parse(cached);
+      }
+    } catch (e) {
+      this.user = null;
+    }
   }
-  return profile;
+
+  getUser() {
+    return this.user;
+  }
+
+  isAuthenticated() {
+    return !!localStorage.getItem('unicircle_token');
+  }
+
+  setSession(token, user) {
+    localStorage.setItem('unicircle_token', token);
+    localStorage.setItem('unicircle_user', JSON.stringify(user));
+    this.user = user;
+    if (user.settings && user.settings.theme) {
+      document.documentElement.setAttribute('data-theme', user.settings.theme);
+      localStorage.setItem('unicircle_theme', user.settings.theme);
+    }
+  }
+
+  async fetchCurrentUser() {
+    if (!this.isAuthenticated()) return null;
+    try {
+      const data = await api.get('/auth/me');
+      if (data.user) {
+        this.setSession(localStorage.getItem('unicircle_token'), data.user);
+        return data.user;
+      }
+    } catch (err) {
+      console.warn('Failed to refresh user session:', err);
+    }
+    return this.user;
+  }
+
+  logout() {
+    localStorage.removeItem('unicircle_token');
+    localStorage.removeItem('unicircle_user');
+    this.user = null;
+    window.location.href = '/pages/login.html';
+  }
+
+  // Guard protected pages
+  async requireAuth() {
+    if (!this.isAuthenticated()) {
+      window.location.href = `/pages/login.html?redirect=${encodeURIComponent(window.location.pathname + window.location.search)}`;
+      return false;
+    }
+
+    const user = await this.fetchCurrentUser();
+    if (!user) {
+      window.location.href = '/pages/login.html';
+      return false;
+    }
+
+    // If user hasn't set their academic institution and is not on the onboarding page, redirect to onboarding
+    if (!user.institution_id && !window.location.pathname.includes('onboarding.html')) {
+      window.location.href = '/pages/onboarding.html';
+      return false;
+    }
+
+    return user;
+  }
+
+  // Prevent logged-in users from viewing login / register pages
+  checkGuest() {
+    if (this.isAuthenticated()) {
+      window.location.href = '/pages/home.html';
+    }
+  }
 }
 
-/** For login/signup pages: bounce a user who's already signed in. */
-export async function redirectIfAuthenticated() {
-  const { data: { session } } = await supabase.auth.getSession();
-  if (session) {
-    const profile = await getCurrentProfile();
-    window.location.href = profile && profile.onboarding_complete ? "home.html" : "onboarding.html";
-  }
-}
+export const auth = new AuthManager();

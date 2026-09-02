@@ -1,28 +1,51 @@
-// UniCircle — toast.js
-// Minimal toast notifications used across pages for success/error feedback.
+// UniCircle Toast Notification System
 
-let region = null;
+class ToastManager {
+  constructor() {
+    this.container = null;
+    this.init();
+  }
 
-function ensureRegion() {
-  if (region) return region;
-  region = document.createElement("div");
-  region.className = "toast-region";
-  region.setAttribute("role", "status");
-  region.setAttribute("aria-live", "polite");
-  document.body.appendChild(region);
-  return region;
+  init() {
+    if (!document.getElementById('toast-container')) {
+      this.container = document.createElement('div');
+      this.container.id = 'toast-container';
+      this.container.className = 'toast-container';
+      document.body.appendChild(this.container);
+    } else {
+      this.container = document.getElementById('toast-container');
+    }
+  }
+
+  show(message, type = 'info', duration = 3500) {
+    if (!this.container) this.init();
+
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+
+    let icon = 'ℹ️';
+    if (type === 'success') icon = '✅';
+    if (type === 'error') icon = '⚠️';
+    if (type === 'warning') icon = '🔔';
+
+    toast.innerHTML = `
+      <span style="font-size: 1.1rem;">${icon}</span>
+      <div style="flex: 1; line-height: 1.4;">${message}</div>
+    `;
+
+    this.container.appendChild(toast);
+
+    setTimeout(() => {
+      toast.classList.add('toast-exit');
+      setTimeout(() => {
+        if (toast.parentNode) toast.parentNode.removeChild(toast);
+      }, 250);
+    }, duration);
+  }
+
+  success(msg, duration) { this.show(msg, 'success', duration); }
+  error(msg, duration) { this.show(msg, 'error', duration); }
+  info(msg, duration) { this.show(msg, 'info', duration); }
 }
 
-export function showToast(message, { type = "default", duration = 4000 } = {}) {
-  const r = ensureRegion();
-  const el = document.createElement("div");
-  el.className = `toast ${type}`;
-  el.textContent = message;
-  r.appendChild(el);
-  setTimeout(() => {
-    el.style.transition = "opacity 200ms ease, transform 200ms ease";
-    el.style.opacity = "0";
-    el.style.transform = "translateY(6px) scale(0.97)";
-    setTimeout(() => el.remove(), 200);
-  }, duration);
-}
+export const toast = new ToastManager();
