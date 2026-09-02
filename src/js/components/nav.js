@@ -296,33 +296,13 @@ export function renderNavigation(activePage = '') {
 
 // REAL-TIME NOTIFICATIONS
 async function initNotificationsStream() {
-  const token = localStorage.getItem('unicircle_token');
-  if (!token) return;
+  const user = auth.getUser();
+  if (!user) return;
 
-  // Initial unread fetch
   try {
-    const data = await api.get('/notifications?unread_only=true');
-    updateNotifBadge(data.unread_count);
+    const data = await api.get('/notifications');
+    updateNotifBadge(data.notifications ? data.notifications.filter(n => !n.is_read).length : 0);
   } catch (e) {}
-
-  // Setup SSE stream
-  try {
-    const evtSource = new EventSource(`/api/notifications/stream?token=${encodeURIComponent(token)}`);
-    evtSource.addEventListener('notification', (e) => {
-      try {
-        const notif = JSON.parse(e.data);
-        toast.info(`🔔 ${notif.title}: ${notif.message}`, 5000);
-        // Increment badge
-        const badge = document.getElementById('notif-badge-count');
-        if (badge) {
-          const current = parseInt(badge.textContent, 10) || 0;
-          updateNotifBadge(current + 1);
-        }
-      } catch (err) {}
-    });
-  } catch (err) {
-    console.warn('SSE connection error:', err);
-  }
 }
 
 function updateNotifBadge(count) {

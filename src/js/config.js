@@ -1,6 +1,7 @@
 // UniCircle Global Configuration & Helpers
 
-export const API_BASE = '/api';
+export const SUPABASE_URL = 'https://ejopbxavewjxknaymjim.supabase.co';
+export const SUPABASE_ANON_KEY = 'sb_publishable_jQOY-Dpc5Hg2x9s9SsmhbA_uu0_8Je2';
 
 // Theme Management
 export const THEMES = [
